@@ -2,6 +2,10 @@
 
 A comprehensive web-based business management system built for Danluq Petro Industries, featuring inventory management, accounting & financial management, order processing, and reporting.
 
+## Quick Deploy
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/muhammadrizwan372/danluq-inventory-app)
+
 ## Features
 
 ### Inventory Management

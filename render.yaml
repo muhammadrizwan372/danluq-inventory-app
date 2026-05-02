@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: danluq-petro
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATABASE_PATH
+        value: /app/backend/inventory.db
