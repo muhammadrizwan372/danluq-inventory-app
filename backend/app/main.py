@@ -89,12 +89,12 @@ def on_startup():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
-        admin = db.query(User).filter(User.email == "admin@example.com").first()
+        admin = db.query(User).filter(User.email == "admin@danluq.com").first()
         if not admin:
             admin = User(
-                email="admin@example.com",
-                full_name="System Admin",
-                hashed_password=get_password_hash("admin123"),
+                email="admin@danluq.com",
+                full_name="Admin",
+                hashed_password=get_password_hash("1234"),
                 role=UserRole.ADMIN,
             )
             db.add(admin)

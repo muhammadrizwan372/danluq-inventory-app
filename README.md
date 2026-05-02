@@ -95,10 +95,10 @@ python seed_demo_data.py
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@example.com | admin123 |
-| Accountant | accountant@danluq.com | account123 |
-| Inventory Manager | inventory@danluq.com | inventory123 |
-| Manager | manager@danluq.com | manager123 |
+| Admin | admin@danluq.com | 1234 |
+| Accountant | accountant@danluq.com | 1234 |
+| Inventory Manager | inventory@danluq.com | 1234 |
+| Manager | manager@danluq.com | 1234 |
 
 > **Note:** Change these passwords in production!
 

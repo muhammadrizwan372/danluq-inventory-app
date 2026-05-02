@@ -5,7 +5,7 @@ import sys
 BASE = "http://localhost:8000/api"
 
 def login():
-    r = requests.post(f"{BASE}/auth/login", json={"email": "admin@example.com", "password": "admin123"})
+    r = requests.post(f"{BASE}/auth/login", json={"email": "admin@danluq.com", "password": "1234"})
     r.raise_for_status()
     return {"Authorization": f"Bearer {r.json()['access_token']}"}
 
@@ -211,9 +211,9 @@ def seed():
 
     # --- Additional Users ---
     extra_users = [
-        {"email": "accountant@danluq.com", "full_name": "Amina Bello", "password": "account123", "role": "accountant"},
-        {"email": "inventory@danluq.com", "full_name": "Chukwu Emeka", "password": "inventory123", "role": "inventory_manager"},
-        {"email": "manager@danluq.com", "full_name": "Yusuf Adamu", "password": "manager123", "role": "manager"},
+        {"email": "accountant@danluq.com", "full_name": "Amina Bello", "password": "1234", "role": "accountant"},
+        {"email": "inventory@danluq.com", "full_name": "Chukwu Emeka", "password": "1234", "role": "inventory_manager"},
+        {"email": "manager@danluq.com", "full_name": "Yusuf Adamu", "password": "1234", "role": "manager"},
     ]
     for u in extra_users:
         r = requests.post(f"{BASE}/auth/register", json=u, headers=h)
@@ -222,10 +222,10 @@ def seed():
 
     print("\nDemo data seeding complete!")
     print("\nUser accounts created:")
-    print("  admin@example.com / admin123 (Admin)")
-    print("  accountant@danluq.com / account123 (Accountant)")
-    print("  inventory@danluq.com / inventory123 (Inventory Manager)")
-    print("  manager@danluq.com / manager123 (Manager)")
+    print("  admin@danluq.com / 1234 (Admin)")
+    print("  accountant@danluq.com / 1234 (Accountant)")
+    print("  inventory@danluq.com / 1234 (Inventory Manager)")
+    print("  manager@danluq.com / 1234 (Manager)")
 
 if __name__ == "__main__":
     seed()
