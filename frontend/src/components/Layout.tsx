@@ -19,6 +19,8 @@ import {
   Wallet,
   CreditCard,
   PieChart,
+  Briefcase,
+  Banknote,
 } from 'lucide-react';
 
 interface NavItem { name: string; href: string; icon: any; adminOnly?: boolean; section?: string; }
@@ -37,6 +39,8 @@ const navigation: NavItem[] = [
   { name: 'Expenses', href: '/expenses', icon: Wallet },
   { name: 'Payables & Receivables', href: '/payables-receivables', icon: CreditCard },
   { name: 'Financial Reports', href: '/financial-reports', icon: PieChart },
+  { name: 'Employees', href: '/employees', icon: Briefcase, section: 'HR & Payroll' },
+  { name: 'Payroll', href: '/payroll', icon: Banknote },
   { name: 'Users', href: '/users', icon: UserCog, adminOnly: true, section: 'Admin' },
 ];
 

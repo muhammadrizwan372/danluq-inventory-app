@@ -209,6 +209,53 @@ def seed():
         requests.put(f"{BASE}/payables-receivables/{pr_ids[2]}", json={"paid_amount": 3000.00}, headers=h)
         print("  Recorded partial payments")
 
+    # --- Employees ---
+    print("\nSeeding employees...")
+    employees_data = [
+        {"employee_id": "DPL-001", "full_name": "Ibrahim Musa", "email": "ibrahim@danluq.com", "phone": "+234 801 234 5678", "department": "management", "position": "General Manager", "date_joined": "2020-03-15", "base_salary": 450000, "bank_name": "First Bank", "bank_account": "3012345678", "address": "12 Marina Road, Lagos", "emergency_contact": "+234 802 111 2222"},
+        {"employee_id": "DPL-002", "full_name": "Amina Bello", "email": "amina.b@danluq.com", "phone": "+234 803 456 7890", "department": "accounts", "position": "Chief Accountant", "date_joined": "2021-01-10", "base_salary": 320000, "bank_name": "GTBank", "bank_account": "0123456789", "address": "45 Ahmadu Bello Way, Kaduna", "emergency_contact": "+234 804 333 4444"},
+        {"employee_id": "DPL-003", "full_name": "Chukwu Emeka", "email": "emeka.c@danluq.com", "phone": "+234 805 678 9012", "department": "warehouse", "position": "Warehouse Supervisor", "date_joined": "2021-06-20", "base_salary": 180000, "bank_name": "UBA", "bank_account": "2098765432", "address": "8 Aba Road, Port Harcourt", "emergency_contact": "+234 806 555 6666"},
+        {"employee_id": "DPL-004", "full_name": "Fatima Abdullahi", "email": "fatima@danluq.com", "phone": "+234 807 890 1234", "department": "sales", "position": "Sales Manager", "date_joined": "2022-02-01", "base_salary": 280000, "bank_name": "Zenith Bank", "bank_account": "1011223344", "address": "22 Kano Road, Kano", "emergency_contact": "+234 808 777 8888"},
+        {"employee_id": "DPL-005", "full_name": "Tunde Olakunle", "email": "tunde@danluq.com", "phone": "+234 809 012 3456", "department": "operations", "position": "Operations Officer", "date_joined": "2022-08-15", "base_salary": 200000, "bank_name": "Access Bank", "bank_account": "0556677889", "address": "15 Lekki Phase 1, Lagos", "emergency_contact": "+234 810 999 0000"},
+        {"employee_id": "DPL-006", "full_name": "Grace Okafor", "email": "grace@danluq.com", "phone": "+234 811 234 5678", "department": "admin", "position": "Administrative Assistant", "date_joined": "2023-01-05", "base_salary": 120000, "bank_name": "First Bank", "bank_account": "3098712345", "address": "5 Herbert Macaulay, Yaba", "emergency_contact": "+234 812 111 3333"},
+        {"employee_id": "DPL-007", "full_name": "Musa Danjuma", "email": "musa.d@danluq.com", "phone": "+234 813 456 7890", "department": "logistics", "position": "Logistics Coordinator", "date_joined": "2023-04-10", "base_salary": 160000, "bank_name": "Stanbic IBTC", "bank_account": "0012233445", "address": "30 Maitama, Abuja", "emergency_contact": "+234 814 222 4444"},
+        {"employee_id": "DPL-008", "full_name": "Blessing Udo", "email": "blessing@danluq.com", "phone": "+234 815 678 9012", "department": "warehouse", "position": "Store Keeper", "date_joined": "2023-09-01", "base_salary": 100000, "bank_name": "GTBank", "bank_account": "0188776655", "address": "7 Trans Amadi, Port Harcourt", "emergency_contact": "+234 816 333 5555"},
+    ]
+    emp_ids = []
+    for emp in employees_data:
+        r = requests.post(f"{BASE}/employees/", json=emp, headers=h)
+        if r.status_code in (200, 201):
+            emp_ids.append(r.json()["id"])
+            print(f"  Employee: {emp['full_name']} ({emp['position']})")
+        else:
+            print(f"  Employee '{emp['full_name']}' skipped (may exist)")
+
+    # --- Payroll Records ---
+    if emp_ids:
+        print("\nSeeding payroll records...")
+        payroll_data = [
+            {"employee_id": emp_ids[0], "month": 4, "year": 2026, "housing_allowance": 50000, "transport_allowance": 30000, "overtime_pay": 0, "other_allowances": 20000, "tax_deduction": 45000, "pension_deduction": 36000, "loan_deduction": 0, "advance_deduction": 0, "late_deduction": 0, "other_deductions": 0},
+            {"employee_id": emp_ids[1], "month": 4, "year": 2026, "housing_allowance": 40000, "transport_allowance": 25000, "overtime_pay": 0, "other_allowances": 15000, "tax_deduction": 32000, "pension_deduction": 25600, "loan_deduction": 10000, "advance_deduction": 0, "late_deduction": 0, "other_deductions": 0},
+            {"employee_id": emp_ids[2], "month": 4, "year": 2026, "housing_allowance": 20000, "transport_allowance": 15000, "overtime_pay": 12000, "other_allowances": 5000, "tax_deduction": 14400, "pension_deduction": 14400, "loan_deduction": 0, "advance_deduction": 5000, "late_deduction": 0, "other_deductions": 0},
+            {"employee_id": emp_ids[3], "month": 4, "year": 2026, "housing_allowance": 35000, "transport_allowance": 20000, "overtime_pay": 0, "other_allowances": 25000, "tax_deduction": 28800, "pension_deduction": 22400, "loan_deduction": 0, "advance_deduction": 0, "late_deduction": 2000, "other_deductions": 0},
+            {"employee_id": emp_ids[4], "month": 4, "year": 2026, "housing_allowance": 25000, "transport_allowance": 15000, "overtime_pay": 8000, "other_allowances": 10000, "tax_deduction": 16000, "pension_deduction": 16000, "loan_deduction": 5000, "advance_deduction": 0, "late_deduction": 0, "other_deductions": 0},
+            {"employee_id": emp_ids[5], "month": 4, "year": 2026, "housing_allowance": 15000, "transport_allowance": 10000, "overtime_pay": 0, "other_allowances": 5000, "tax_deduction": 9600, "pension_deduction": 9600, "loan_deduction": 0, "advance_deduction": 0, "late_deduction": 0, "other_deductions": 0},
+            {"employee_id": emp_ids[6], "month": 4, "year": 2026, "housing_allowance": 20000, "transport_allowance": 15000, "overtime_pay": 5000, "other_allowances": 5000, "tax_deduction": 12800, "pension_deduction": 12800, "loan_deduction": 0, "advance_deduction": 3000, "late_deduction": 0, "other_deductions": 0},
+            {"employee_id": emp_ids[7], "month": 4, "year": 2026, "housing_allowance": 12000, "transport_allowance": 8000, "overtime_pay": 6000, "other_allowances": 0, "tax_deduction": 8000, "pension_deduction": 8000, "loan_deduction": 0, "advance_deduction": 0, "late_deduction": 1000, "other_deductions": 0},
+        ]
+        for i, pr in enumerate(payroll_data):
+            r = requests.post(f"{BASE}/payroll/", json=pr, headers=h)
+            if r.status_code in (200, 201):
+                rec_id = r.json()["id"]
+                emp_name = employees_data[i]["full_name"]
+                print(f"  Payroll: {emp_name} - April 2026")
+                # Mark some as approved/paid
+                if i < 3:
+                    requests.put(f"{BASE}/payroll/{rec_id}", json={"status": "approved"}, headers=h)
+                    requests.put(f"{BASE}/payroll/{rec_id}", json={"status": "paid"}, headers=h)
+                elif i < 5:
+                    requests.put(f"{BASE}/payroll/{rec_id}", json={"status": "approved"}, headers=h)
+
     # --- Additional Users ---
     extra_users = [
         {"email": "accountant@danluq.com", "full_name": "Amina Bello", "password": "1234", "role": "accountant"},
