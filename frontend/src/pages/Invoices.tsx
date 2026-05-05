@@ -45,7 +45,7 @@ export default function Invoices() {
                   <td className={`${TD} font-medium`}>{inv.invoice_number}</td>
                   <td className={TD}>Order #{inv.order_id}</td>
                   <td className={TD}><span className={getStatusBadgeClass(inv.status)}>{inv.status}</span></td>
-                  <td className={`${TD} font-medium`}>${inv.total.toFixed(2)}</td>
+                  <td className={`${TD} font-medium`}>Rs.{inv.total.toFixed(2)}</td>
                   <td className={`${TD} text-gray-500`}>{inv.due_date ? new Date(inv.due_date).toLocaleDateString() : '-'}</td>
                   <td className={`${TD} text-gray-500`}>{inv.paid_date ? new Date(inv.paid_date).toLocaleDateString() : '-'}</td>
                   <td className={TD}>

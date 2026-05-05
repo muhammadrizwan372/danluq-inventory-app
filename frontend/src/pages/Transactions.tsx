@@ -94,8 +94,8 @@ export default function Transactions() {
               </div>
               <table className="w-full text-sm text-left"><thead className="bg-gray-50 border-b"><tr><th className={TH}>Account</th><th className={TH}>Debit</th><th className={TH}>Credit</th><th className={TH}>Note</th></tr></thead>
                 <tbody>
-                  {showDetail.entries.map((e) => (<tr key={e.id}><td className={`${TD} font-medium`}>{e.account_name}</td><td className={TD}>{e.debit > 0 ? `$${e.debit.toFixed(2)}` : '-'}</td><td className={TD}>{e.credit > 0 ? `$${e.credit.toFixed(2)}` : '-'}</td><td className={`${TD} text-gray-500`}>{e.description || '-'}</td></tr>))}
-                  <tr className="bg-gray-50 font-semibold"><td className={TD}>Total</td><td className={TD}>${showDetail.entries.reduce((s, e) => s + e.debit, 0).toFixed(2)}</td><td className={TD}>${showDetail.entries.reduce((s, e) => s + e.credit, 0).toFixed(2)}</td><td className={TD}></td></tr>
+                  {showDetail.entries.map((e) => (<tr key={e.id}><td className={`${TD} font-medium`}>{e.account_name}</td><td className={TD}>{e.debit > 0 ? `Rs.${e.debit.toFixed(2)}` : '-'}</td><td className={TD}>{e.credit > 0 ? `Rs.${e.credit.toFixed(2)}` : '-'}</td><td className={`${TD} text-gray-500`}>{e.description || '-'}</td></tr>))}
+                  <tr className="bg-gray-50 font-semibold"><td className={TD}>Total</td><td className={TD}>Rs.{showDetail.entries.reduce((s, e) => s + e.debit, 0).toFixed(2)}</td><td className={TD}>Rs.{showDetail.entries.reduce((s, e) => s + e.credit, 0).toFixed(2)}</td><td className={TD}></td></tr>
                 </tbody>
               </table>
             </div>
@@ -126,7 +126,7 @@ export default function Transactions() {
                   ))}
                 </div>
                 <div className={`mt-2 text-sm font-medium ${balanced ? 'text-green-600' : 'text-red-600'}`}>
-                  Debits: ${totalDebits.toFixed(2)} | Credits: ${totalCredits.toFixed(2)} | {balanced ? 'Balanced' : 'Not balanced'}
+                  Debits: Rs.{totalDebits.toFixed(2)} | Credits: Rs.{totalCredits.toFixed(2)} | {balanced ? 'Balanced' : 'Not balanced'}
                 </div>
               </div>
               <div className="flex justify-end gap-3 pt-2"><button type="button" className={btnStyles.secondary} onClick={() => setShowModal(false)}>Cancel</button><button type="submit" className={btnStyles.primary} disabled={!balanced}>Create Entry</button></div>

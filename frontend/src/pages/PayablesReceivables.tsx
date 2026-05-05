@@ -70,9 +70,9 @@ export default function PayablesReceivables() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Total</p><p className="text-2xl font-bold text-gray-900">${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Paid</p><p className="text-2xl font-bold text-green-600">${totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Outstanding</p><p className="text-2xl font-bold text-red-600">${totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Total</p><p className="text-2xl font-bold text-gray-900">Rs.{totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Paid</p><p className="text-2xl font-bold text-green-600">Rs.{totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Outstanding</p><p className="text-2xl font-bold text-red-600">Rs.{totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -86,9 +86,9 @@ export default function PayablesReceivables() {
                 <tr key={r.id} className="hover:bg-gray-50">
                   <td className={`${TD} font-medium`}>{r.party_name || '-'}</td>
                   <td className={TD}>{r.description}</td>
-                  <td className={`${TD} font-medium`}>${r.total_amount.toFixed(2)}</td>
-                  <td className={`${TD} text-green-600`}>${r.paid_amount.toFixed(2)}</td>
-                  <td className={`${TD} text-red-600 font-medium`}>${r.balance.toFixed(2)}</td>
+                  <td className={`${TD} font-medium`}>Rs.{r.total_amount.toFixed(2)}</td>
+                  <td className={`${TD} text-green-600`}>Rs.{r.paid_amount.toFixed(2)}</td>
+                  <td className={`${TD} text-red-600 font-medium`}>Rs.{r.balance.toFixed(2)}</td>
                   <td className={`${TD} text-gray-500`}>{r.due_date ? new Date(r.due_date).toLocaleDateString() : '-'}</td>
                   <td className={TD}><span className={getStatusBadgeClass(r.status)}>{r.status}</span></td>
                   <td className={TD}>
@@ -128,7 +128,7 @@ export default function PayablesReceivables() {
           <div className="bg-white rounded-xl shadow-xl w-full max-w-sm">
             <div className="flex items-center justify-between px-6 py-4 border-b"><h2 className="text-lg font-semibold">Record Payment</h2><button onClick={() => setPayModal(null)}><X className="h-5 w-5" /></button></div>
             <form onSubmit={handlePay} className="p-6 space-y-4">
-              <p className="text-sm text-gray-600">Outstanding: <span className="font-semibold text-red-600">${payModal.balance.toFixed(2)}</span></p>
+              <p className="text-sm text-gray-600">Outstanding: <span className="font-semibold text-red-600">Rs.{payModal.balance.toFixed(2)}</span></p>
               <div><label className={labelStyle}>Payment Amount *</label><input type="number" step="0.01" max={payModal.balance} className={inputStyle} value={payAmount} onChange={(e) => setPayAmount(e.target.value)} required /></div>
               <div className="flex justify-end gap-3 pt-2"><button type="button" className={btnStyles.secondary} onClick={() => setPayModal(null)}>Cancel</button><button type="submit" className={btnStyles.primary}>Submit Payment</button></div>
             </form>

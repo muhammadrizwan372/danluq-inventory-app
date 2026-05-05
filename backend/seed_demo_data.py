@@ -32,21 +32,21 @@ def seed():
 
     # --- Products ---
     products = [
-        {"name": "Premium Engine Oil 5W-30", "sku": "LUB-001", "description": "High-performance synthetic engine oil", "category_id": cat_ids.get("Lubricants"), "price": 45.00, "cost": 28.00, "stock_quantity": 150, "reorder_level": 30, "unit": "liters"},
-        {"name": "Hydraulic Oil ISO 68", "sku": "LUB-002", "description": "Industrial hydraulic fluid", "category_id": cat_ids.get("Lubricants"), "price": 38.50, "cost": 22.00, "stock_quantity": 200, "reorder_level": 50, "unit": "liters"},
-        {"name": "Multi-Purpose Grease", "sku": "LUB-003", "description": "Lithium-based grease for bearings", "category_id": cat_ids.get("Lubricants"), "price": 12.00, "cost": 6.50, "stock_quantity": 80, "reorder_level": 20, "unit": "kg"},
-        {"name": "Gear Oil 80W-90", "sku": "LUB-004", "description": "Heavy-duty gear lubricant", "category_id": cat_ids.get("Lubricants"), "price": 52.00, "cost": 32.00, "stock_quantity": 5, "reorder_level": 25, "unit": "liters"},
-        {"name": "AGO Diesel Fuel", "sku": "FUEL-001", "description": "Automotive Gas Oil (Diesel)", "category_id": cat_ids.get("Fuel Products"), "price": 1.20, "cost": 0.95, "stock_quantity": 5000, "reorder_level": 1000, "unit": "liters"},
-        {"name": "Premium Motor Spirit", "sku": "FUEL-002", "description": "PMS (Petrol)", "category_id": cat_ids.get("Fuel Products"), "price": 1.10, "cost": 0.88, "stock_quantity": 3000, "reorder_level": 800, "unit": "liters"},
-        {"name": "Kerosene (DPK)", "sku": "FUEL-003", "description": "Dual Purpose Kerosene", "category_id": cat_ids.get("Fuel Products"), "price": 0.95, "cost": 0.72, "stock_quantity": 2000, "reorder_level": 500, "unit": "liters"},
-        {"name": "Industrial Solvent", "sku": "CHEM-001", "description": "Cleaning solvent for equipment", "category_id": cat_ids.get("Industrial Chemicals"), "price": 25.00, "cost": 15.00, "stock_quantity": 60, "reorder_level": 15, "unit": "liters"},
-        {"name": "Fuel Additive Plus", "sku": "CHEM-002", "description": "Fuel performance enhancer", "category_id": cat_ids.get("Industrial Chemicals"), "price": 18.00, "cost": 9.50, "stock_quantity": 100, "reorder_level": 25, "unit": "bottles"},
-        {"name": "Diesel Fuel Pump", "sku": "EQP-001", "description": "Heavy-duty fuel transfer pump", "category_id": cat_ids.get("Equipment & Parts"), "price": 350.00, "cost": 220.00, "stock_quantity": 8, "reorder_level": 3, "unit": "pcs"},
-        {"name": "Oil Filter (Universal)", "sku": "EQP-002", "description": "Universal oil filter for engines", "category_id": cat_ids.get("Equipment & Parts"), "price": 15.00, "cost": 7.50, "stock_quantity": 3, "reorder_level": 20, "unit": "pcs"},
-        {"name": "Fuel Hose 2-inch", "sku": "EQP-003", "description": "Flexible fuel hose, 2-inch diameter", "category_id": cat_ids.get("Equipment & Parts"), "price": 8.50, "cost": 4.20, "stock_quantity": 120, "reorder_level": 30, "unit": "meters"},
-        {"name": "Safety Helmet", "sku": "SAF-001", "description": "Industrial safety helmet, ANSI approved", "category_id": cat_ids.get("Safety Gear"), "price": 22.00, "cost": 12.00, "stock_quantity": 25, "reorder_level": 10, "unit": "pcs"},
-        {"name": "Chemical Resistant Gloves", "sku": "SAF-002", "description": "Nitrile gloves for chemical handling", "category_id": cat_ids.get("Safety Gear"), "price": 8.00, "cost": 3.50, "stock_quantity": 50, "reorder_level": 20, "unit": "pairs"},
-        {"name": "Fire Extinguisher 5kg", "sku": "SAF-003", "description": "Dry powder fire extinguisher", "category_id": cat_ids.get("Safety Gear"), "price": 65.00, "cost": 38.00, "stock_quantity": 12, "reorder_level": 5, "unit": "pcs"},
+        {"name": "Premium Engine Oil 5W-30", "sku": "LUB-001", "description": "High-performance synthetic engine oil", "category_id": cat_ids.get("Lubricants"), "price": 12600.00, "cost": 7840.00, "stock_quantity": 150, "reorder_level": 30, "unit": "kg"},
+        {"name": "Hydraulic Oil ISO 68", "sku": "LUB-002", "description": "Industrial hydraulic fluid", "category_id": cat_ids.get("Lubricants"), "price": 10780.00, "cost": 6160.00, "stock_quantity": 200, "reorder_level": 50, "unit": "kg"},
+        {"name": "Multi-Purpose Grease", "sku": "LUB-003", "description": "Lithium-based grease for bearings", "category_id": cat_ids.get("Lubricants"), "price": 3360.00, "cost": 1820.00, "stock_quantity": 80, "reorder_level": 20, "unit": "kg"},
+        {"name": "Gear Oil 80W-90", "sku": "LUB-004", "description": "Heavy-duty gear lubricant", "category_id": cat_ids.get("Lubricants"), "price": 14560.00, "cost": 8960.00, "stock_quantity": 5, "reorder_level": 25, "unit": "kg"},
+        {"name": "AGO Diesel Fuel", "sku": "FUEL-001", "description": "Automotive Gas Oil (Diesel)", "category_id": cat_ids.get("Fuel Products"), "price": 336.00, "cost": 266.00, "stock_quantity": 5000, "reorder_level": 1000, "unit": "kg"},
+        {"name": "Premium Motor Spirit", "sku": "FUEL-002", "description": "PMS (Petrol)", "category_id": cat_ids.get("Fuel Products"), "price": 308.00, "cost": 246.00, "stock_quantity": 3000, "reorder_level": 800, "unit": "kg"},
+        {"name": "Kerosene (DPK)", "sku": "FUEL-003", "description": "Dual Purpose Kerosene", "category_id": cat_ids.get("Fuel Products"), "price": 266.00, "cost": 202.00, "stock_quantity": 2000, "reorder_level": 500, "unit": "kg"},
+        {"name": "Industrial Solvent", "sku": "CHEM-001", "description": "Cleaning solvent for equipment", "category_id": cat_ids.get("Industrial Chemicals"), "price": 7000.00, "cost": 4200.00, "stock_quantity": 60, "reorder_level": 15, "unit": "kg"},
+        {"name": "Fuel Additive Plus", "sku": "CHEM-002", "description": "Fuel performance enhancer", "category_id": cat_ids.get("Industrial Chemicals"), "price": 5040.00, "cost": 2660.00, "stock_quantity": 100, "reorder_level": 25, "unit": "kg"},
+        {"name": "Diesel Fuel Pump", "sku": "EQP-001", "description": "Heavy-duty fuel transfer pump", "category_id": cat_ids.get("Equipment & Parts"), "price": 98000.00, "cost": 61600.00, "stock_quantity": 8, "reorder_level": 3, "unit": "kg"},
+        {"name": "Oil Filter (Universal)", "sku": "EQP-002", "description": "Universal oil filter for engines", "category_id": cat_ids.get("Equipment & Parts"), "price": 4200.00, "cost": 2100.00, "stock_quantity": 3, "reorder_level": 20, "unit": "kg"},
+        {"name": "Fuel Hose 2-inch", "sku": "EQP-003", "description": "Flexible fuel hose, 2-inch diameter", "category_id": cat_ids.get("Equipment & Parts"), "price": 2380.00, "cost": 1176.00, "stock_quantity": 120, "reorder_level": 30, "unit": "kg"},
+        {"name": "Safety Helmet", "sku": "SAF-001", "description": "Industrial safety helmet, ANSI approved", "category_id": cat_ids.get("Safety Gear"), "price": 6160.00, "cost": 3360.00, "stock_quantity": 25, "reorder_level": 10, "unit": "kg"},
+        {"name": "Chemical Resistant Gloves", "sku": "SAF-002", "description": "Nitrile gloves for chemical handling", "category_id": cat_ids.get("Safety Gear"), "price": 2240.00, "cost": 980.00, "stock_quantity": 50, "reorder_level": 20, "unit": "kg"},
+        {"name": "Fire Extinguisher 5kg", "sku": "SAF-003", "description": "Dry powder fire extinguisher", "category_id": cat_ids.get("Safety Gear"), "price": 18200.00, "cost": 10640.00, "stock_quantity": 12, "reorder_level": 5, "unit": "kg"},
     ]
     prod_ids = {}
     for p in products:
@@ -88,15 +88,15 @@ def seed():
     # --- Orders ---
     orders = [
         {"customer_id": cust_ids.get("Niger Delta Construction Co."), "notes": "Urgent - construction site delivery", "tax": 7.5, "discount": 5.0,
-         "items": [{"product_id": prod_ids.get("LUB-001"), "quantity": 20, "unit_price": 45.00}, {"product_id": prod_ids.get("LUB-003"), "quantity": 10, "unit_price": 12.00}]},
+         "items": [{"product_id": prod_ids.get("LUB-001"), "quantity": 20, "unit_price": 12600.00}, {"product_id": prod_ids.get("LUB-003"), "quantity": 10, "unit_price": 3360.00}]},
         {"customer_id": cust_ids.get("Abuja Transport Services"), "notes": "Monthly fleet supply", "tax": 7.5, "discount": 0,
-         "items": [{"product_id": prod_ids.get("FUEL-001"), "quantity": 500, "unit_price": 1.20}, {"product_id": prod_ids.get("EQP-002"), "quantity": 5, "unit_price": 15.00}]},
+         "items": [{"product_id": prod_ids.get("FUEL-001"), "quantity": 500, "unit_price": 336.00}, {"product_id": prod_ids.get("EQP-002"), "quantity": 5, "unit_price": 4200.00}]},
         {"customer_id": cust_ids.get("Lagos Haulage Company"), "notes": "Haulage fleet maintenance", "tax": 7.5, "discount": 2.0,
-         "items": [{"product_id": prod_ids.get("LUB-001"), "quantity": 50, "unit_price": 45.00}, {"product_id": prod_ids.get("LUB-002"), "quantity": 30, "unit_price": 38.50}]},
+         "items": [{"product_id": prod_ids.get("LUB-001"), "quantity": 50, "unit_price": 12600.00}, {"product_id": prod_ids.get("LUB-002"), "quantity": 30, "unit_price": 10780.00}]},
         {"customer_id": cust_ids.get("Zenith Generators"), "notes": "Generator maintenance order", "tax": 7.5, "discount": 0,
-         "items": [{"product_id": prod_ids.get("LUB-001"), "quantity": 10, "unit_price": 45.00}, {"product_id": prod_ids.get("EQP-002"), "quantity": 8, "unit_price": 15.00}]},
+         "items": [{"product_id": prod_ids.get("LUB-001"), "quantity": 10, "unit_price": 12600.00}, {"product_id": prod_ids.get("EQP-002"), "quantity": 8, "unit_price": 4200.00}]},
         {"customer_id": cust_ids.get("Dangote Farms Ltd"), "notes": "Agricultural equipment lubricants", "tax": 7.5, "discount": 3.0,
-         "items": [{"product_id": prod_ids.get("LUB-002"), "quantity": 40, "unit_price": 38.50}, {"product_id": prod_ids.get("LUB-003"), "quantity": 15, "unit_price": 12.00}]},
+         "items": [{"product_id": prod_ids.get("LUB-002"), "quantity": 40, "unit_price": 10780.00}, {"product_id": prod_ids.get("LUB-003"), "quantity": 15, "unit_price": 3360.00}]},
     ]
     order_ids = []
     for o in orders:
@@ -113,11 +113,11 @@ def seed():
     # --- Purchase Orders ---
     pos = [
         {"supplier_id": sup_ids.get("PetroMax Distributors"), "notes": "Monthly fuel restock",
-         "items": [{"product_id": prod_ids.get("FUEL-001"), "quantity": 2000, "unit_price": 0.95}, {"product_id": prod_ids.get("FUEL-002"), "quantity": 1500, "unit_price": 0.88}]},
+         "items": [{"product_id": prod_ids.get("FUEL-001"), "quantity": 2000, "unit_price": 266.00}, {"product_id": prod_ids.get("FUEL-002"), "quantity": 1500, "unit_price": 246.00}]},
         {"supplier_id": sup_ids.get("Global Lubricants Ltd"), "notes": "Lubricant inventory replenishment",
-         "items": [{"product_id": prod_ids.get("LUB-001"), "quantity": 100, "unit_price": 28.00}, {"product_id": prod_ids.get("LUB-002"), "quantity": 80, "unit_price": 22.00}]},
+         "items": [{"product_id": prod_ids.get("LUB-001"), "quantity": 100, "unit_price": 7840.00}, {"product_id": prod_ids.get("LUB-002"), "quantity": 80, "unit_price": 6160.00}]},
         {"supplier_id": sup_ids.get("SafetyFirst Supplies"), "notes": "Safety equipment order",
-         "items": [{"product_id": prod_ids.get("SAF-001"), "quantity": 20, "unit_price": 12.00}, {"product_id": prod_ids.get("SAF-002"), "quantity": 50, "unit_price": 3.50}]},
+         "items": [{"product_id": prod_ids.get("SAF-001"), "quantity": 20, "unit_price": 3360.00}, {"product_id": prod_ids.get("SAF-002"), "quantity": 50, "unit_price": 980.00}]},
     ]
     for po in pos:
         if po["supplier_id"] and all(item["product_id"] for item in po["items"]):
@@ -127,16 +127,16 @@ def seed():
 
     # --- Expenses ---
     expenses = [
-        {"category": "rent", "description": "Warehouse rent - May 2025", "amount": 2500.00, "is_paid": True, "reference": "RENT-MAY25"},
-        {"category": "utilities", "description": "Electricity bill - April 2025", "amount": 850.00, "is_paid": True, "reference": "ELEC-APR25"},
-        {"category": "transport", "description": "Fuel delivery to Lagos depot", "amount": 1200.00, "is_paid": True, "reference": "TRANS-001"},
-        {"category": "salaries", "description": "Staff salaries - April 2025", "amount": 8500.00, "is_paid": True, "reference": "SAL-APR25"},
-        {"category": "maintenance", "description": "Pump repair and servicing", "amount": 450.00, "is_paid": False, "reference": "MAINT-001"},
-        {"category": "supplies", "description": "Office stationery and supplies", "amount": 120.00, "is_paid": True, "reference": "OFF-001"},
-        {"category": "insurance", "description": "Warehouse insurance premium Q2", "amount": 1800.00, "is_paid": False, "reference": "INS-Q2-25"},
-        {"category": "marketing", "description": "Business cards and flyers printing", "amount": 350.00, "is_paid": True, "reference": "MKT-001"},
-        {"category": "transport", "description": "Delivery truck fuel", "amount": 680.00, "is_paid": True, "reference": "TRANS-002"},
-        {"category": "utilities", "description": "Internet service - May 2025", "amount": 150.00, "is_paid": False, "reference": "NET-MAY25"},
+        {"category": "rent", "description": "Warehouse rent - May 2025", "amount": 700000.00, "is_paid": True, "reference": "RENT-MAY25"},
+        {"category": "utilities", "description": "Electricity bill - April 2025", "amount": 238000.00, "is_paid": True, "reference": "ELEC-APR25"},
+        {"category": "transport", "description": "Fuel delivery to depot", "amount": 336000.00, "is_paid": True, "reference": "TRANS-001"},
+        {"category": "salaries", "description": "Staff salaries - April 2025", "amount": 2380000.00, "is_paid": True, "reference": "SAL-APR25"},
+        {"category": "maintenance", "description": "Pump repair and servicing", "amount": 126000.00, "is_paid": False, "reference": "MAINT-001"},
+        {"category": "supplies", "description": "Office stationery and supplies", "amount": 33600.00, "is_paid": True, "reference": "OFF-001"},
+        {"category": "insurance", "description": "Warehouse insurance premium Q2", "amount": 504000.00, "is_paid": False, "reference": "INS-Q2-25"},
+        {"category": "marketing", "description": "Business cards and flyers printing", "amount": 98000.00, "is_paid": True, "reference": "MKT-001"},
+        {"category": "transport", "description": "Delivery truck fuel", "amount": 190400.00, "is_paid": True, "reference": "TRANS-002"},
+        {"category": "utilities", "description": "Internet service - May 2025", "amount": 42000.00, "is_paid": False, "reference": "NET-MAY25"},
     ]
     for e in expenses:
         r = requests.post(f"{BASE}/expenses/", json=e, headers=h)
@@ -150,28 +150,28 @@ def seed():
 
     txns = [
         {"description": "Initial capital investment", "entries": [
-            {"account_id": acct_map.get("1100"), "debit": 50000.00, "credit": 0, "description": "Bank deposit"},
-            {"account_id": acct_map.get("3000"), "debit": 0, "credit": 50000.00, "description": "Owner's capital"},
+            {"account_id": acct_map.get("1100"), "debit": 14000000.00, "credit": 0, "description": "Bank deposit"},
+            {"account_id": acct_map.get("3000"), "debit": 0, "credit": 14000000.00, "description": "Owner's capital"},
         ]},
         {"description": "Inventory purchase - lubricants", "entries": [
-            {"account_id": acct_map.get("1300"), "debit": 8500.00, "credit": 0, "description": "Lubricant stock"},
-            {"account_id": acct_map.get("1100"), "debit": 0, "credit": 8500.00, "description": "Bank payment"},
+            {"account_id": acct_map.get("1300"), "debit": 2380000.00, "credit": 0, "description": "Lubricant stock"},
+            {"account_id": acct_map.get("1100"), "debit": 0, "credit": 2380000.00, "description": "Bank payment"},
         ]},
         {"description": "Sales revenue - Niger Delta Construction", "entries": [
-            {"account_id": acct_map.get("1200"), "debit": 5200.00, "credit": 0, "description": "Customer receivable"},
-            {"account_id": acct_map.get("4000"), "debit": 0, "credit": 5200.00, "description": "Sales income"},
+            {"account_id": acct_map.get("1200"), "debit": 1456000.00, "credit": 0, "description": "Customer receivable"},
+            {"account_id": acct_map.get("4000"), "debit": 0, "credit": 1456000.00, "description": "Sales income"},
         ]},
         {"description": "Office rent payment", "entries": [
-            {"account_id": acct_map.get("5200"), "debit": 2500.00, "credit": 0, "description": "Rent expense"},
-            {"account_id": acct_map.get("1100"), "debit": 0, "credit": 2500.00, "description": "Bank payment"},
+            {"account_id": acct_map.get("5200"), "debit": 700000.00, "credit": 0, "description": "Rent expense"},
+            {"account_id": acct_map.get("1100"), "debit": 0, "credit": 700000.00, "description": "Bank payment"},
         ]},
         {"description": "Customer payment received", "entries": [
-            {"account_id": acct_map.get("1100"), "debit": 3000.00, "credit": 0, "description": "Payment from customer"},
-            {"account_id": acct_map.get("1200"), "debit": 0, "credit": 3000.00, "description": "Reduce receivable"},
+            {"account_id": acct_map.get("1100"), "debit": 840000.00, "credit": 0, "description": "Payment from customer"},
+            {"account_id": acct_map.get("1200"), "debit": 0, "credit": 840000.00, "description": "Reduce receivable"},
         ]},
         {"description": "Utility bills payment", "entries": [
-            {"account_id": acct_map.get("5300"), "debit": 850.00, "credit": 0, "description": "Electricity"},
-            {"account_id": acct_map.get("1000"), "debit": 0, "credit": 850.00, "description": "Cash payment"},
+            {"account_id": acct_map.get("5300"), "debit": 238000.00, "credit": 0, "description": "Electricity"},
+            {"account_id": acct_map.get("1000"), "debit": 0, "credit": 238000.00, "description": "Cash payment"},
         ]},
     ]
     txn_ids = []
@@ -190,11 +190,11 @@ def seed():
 
     # --- Payables & Receivables ---
     prs = [
-        {"type": "payable", "party_name": "PetroMax Distributors", "description": "Fuel supply invoice - May batch", "total_amount": 12500.00, "supplier_id": sup_ids.get("PetroMax Distributors")},
-        {"type": "payable", "party_name": "Global Lubricants Ltd", "description": "Lubricant stock purchase", "total_amount": 4560.00, "supplier_id": sup_ids.get("Global Lubricants Ltd")},
-        {"type": "receivable", "party_name": "Niger Delta Construction Co.", "description": "Order payment outstanding", "total_amount": 5200.00, "customer_id": cust_ids.get("Niger Delta Construction Co.")},
-        {"type": "receivable", "party_name": "Abuja Transport Services", "description": "Fleet supply invoice", "total_amount": 3800.00, "customer_id": cust_ids.get("Abuja Transport Services")},
-        {"type": "receivable", "party_name": "Lagos Haulage Company", "description": "Lubricant order balance", "total_amount": 7250.00, "customer_id": cust_ids.get("Lagos Haulage Company")},
+        {"type": "payable", "party_name": "PetroMax Distributors", "description": "Fuel supply invoice - May batch", "total_amount": 3500000.00, "supplier_id": sup_ids.get("PetroMax Distributors")},
+        {"type": "payable", "party_name": "Global Lubricants Ltd", "description": "Lubricant stock purchase", "total_amount": 1276800.00, "supplier_id": sup_ids.get("Global Lubricants Ltd")},
+        {"type": "receivable", "party_name": "Niger Delta Construction Co.", "description": "Order payment outstanding", "total_amount": 1456000.00, "customer_id": cust_ids.get("Niger Delta Construction Co.")},
+        {"type": "receivable", "party_name": "Abuja Transport Services", "description": "Fleet supply invoice", "total_amount": 1064000.00, "customer_id": cust_ids.get("Abuja Transport Services")},
+        {"type": "receivable", "party_name": "Lagos Haulage Company", "description": "Lubricant order balance", "total_amount": 2030000.00, "customer_id": cust_ids.get("Lagos Haulage Company")},
     ]
     pr_ids = []
     for p in prs:
@@ -205,8 +205,8 @@ def seed():
 
     # Record partial payments on some
     if len(pr_ids) >= 3:
-        requests.put(f"{BASE}/payables-receivables/{pr_ids[0]}", json={"paid_amount": 8000.00}, headers=h)
-        requests.put(f"{BASE}/payables-receivables/{pr_ids[2]}", json={"paid_amount": 3000.00}, headers=h)
+        requests.put(f"{BASE}/payables-receivables/{pr_ids[0]}", json={"paid_amount": 2240000.00}, headers=h)
+        requests.put(f"{BASE}/payables-receivables/{pr_ids[2]}", json={"paid_amount": 840000.00}, headers=h)
         print("  Recorded partial payments")
 
     # --- Employees ---

@@ -74,7 +74,7 @@ export default function Employees() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4"><p className="text-sm text-gray-500">Total Employees</p><p className="text-2xl font-bold">{employees.length}</p></div>
         <div className="bg-white rounded-xl shadow-sm border p-4"><p className="text-sm text-gray-500">Active Employees</p><p className="text-2xl font-bold text-green-600">{activeCount}</p></div>
-        <div className="bg-white rounded-xl shadow-sm border p-4"><p className="text-sm text-gray-500">Total Monthly Salary</p><p className="text-2xl font-bold text-blue-600">₦{totalSalary.toLocaleString()}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border p-4"><p className="text-sm text-gray-500">Total Monthly Salary</p><p className="text-2xl font-bold text-blue-600">Rs.{totalSalary.toLocaleString()}</p></div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -97,7 +97,7 @@ export default function Employees() {
                   <td className={`${TD} font-medium`}>{e.full_name}</td>
                   <td className={TD}><span className="capitalize">{e.department}</span></td>
                   <td className={TD}>{e.position}</td>
-                  <td className={TD}>₦{e.base_salary.toLocaleString()}</td>
+                  <td className={TD}>Rs.{e.base_salary.toLocaleString()}</td>
                   <td className={TD}><span className={getStatusBadgeClass(e.status)}>{e.status}</span></td>
                   <td className={TD}><div className="flex gap-1"><button className={`${btnStyles.secondary} ${btnStyles.sm}`} onClick={() => openEdit(e)}><Edit className="h-3.5 w-3.5" /></button><button className={`${btnStyles.danger} ${btnStyles.sm}`} onClick={() => handleDelete(e.id)}><Trash2 className="h-3.5 w-3.5" /></button></div></td>
                 </tr>
@@ -130,7 +130,7 @@ export default function Employees() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><label className={labelStyle}>Date Joined *</label><input type="date" className={inputStyle} value={form.date_joined} onChange={(e) => setForm({ ...form, date_joined: e.target.value })} required /></div>
-                <div><label className={labelStyle}>Base Salary (₦) *</label><input type="number" className={inputStyle} value={form.base_salary} onChange={(e) => setForm({ ...form, base_salary: e.target.value })} required /></div>
+                <div><label className={labelStyle}>Base Salary (Rs.) *</label><input type="number" className={inputStyle} value={form.base_salary} onChange={(e) => setForm({ ...form, base_salary: e.target.value })} required /></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><label className={labelStyle}>Bank Name</label><input className={inputStyle} value={form.bank_name} onChange={(e) => setForm({ ...form, bank_name: e.target.value })} /></div>

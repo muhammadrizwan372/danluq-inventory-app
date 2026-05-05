@@ -17,7 +17,7 @@ const Card = ({ title, value, icon: Icon, color }: { title: string; value: strin
 );
 const TH = 'px-4 py-3 font-medium text-gray-600 text-xs uppercase tracking-wider';
 const TD = 'px-4 py-3 border-b border-gray-100';
-const fmt = (n: number) => '$' + Math.abs(n).toLocaleString(undefined, { minimumFractionDigits: 2 });
+const fmt = (n: number) => 'Rs.' + Math.abs(n).toLocaleString(undefined, { minimumFractionDigits: 2 });
 
 export default function FinancialReports() {
   const [summary, setSummary] = useState<FinSummary | null>(null);

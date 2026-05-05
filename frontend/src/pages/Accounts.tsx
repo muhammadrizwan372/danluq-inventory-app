@@ -76,7 +76,7 @@ export default function Accounts() {
                     <td className={`${TD} font-mono font-medium`}>{a.code}</td>
                     <td className={`${TD} font-medium`}>{a.name}</td>
                     <td className={TD}><span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${typeColors[a.account_type] || 'bg-gray-100 text-gray-800'}`}>{a.account_type}</span></td>
-                    <td className={`${TD} font-medium`}>${a.balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                    <td className={`${TD} font-medium`}>Rs.{a.balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                     <td className={TD}><span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${a.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{a.is_active ? 'Active' : 'Inactive'}</span></td>
                     <td className={TD}><div className="flex gap-1"><button className={`${btnStyles.secondary} ${btnStyles.sm}`} onClick={() => openEdit(a)}><Edit className="h-3.5 w-3.5" /></button><button className={`${btnStyles.danger} ${btnStyles.sm}`} onClick={() => handleDelete(a.id)}><Trash2 className="h-3.5 w-3.5" /></button></div></td>
                   </tr>

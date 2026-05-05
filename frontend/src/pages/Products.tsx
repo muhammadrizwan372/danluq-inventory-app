@@ -21,7 +21,7 @@ export default function Products() {
   const [editing, setEditing] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [showLowStock, setShowLowStock] = useState(false);
-  const [form, setForm] = useState({ name: '', sku: '', description: '', category_id: '', price: '', cost: '', stock_quantity: '', reorder_level: '10', unit: 'pcs' });
+  const [form, setForm] = useState({ name: '', sku: '', description: '', category_id: '', price: '', cost: '', stock_quantity: '', reorder_level: '10', unit: 'kg' });
 
   const fetchProducts = () => {
     const params: Record<string, string> = {};
@@ -36,7 +36,7 @@ export default function Products() {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: '', sku: '', description: '', category_id: '', price: '', cost: '', stock_quantity: '', reorder_level: '10', unit: 'pcs' });
+    setForm({ name: '', sku: '', description: '', category_id: '', price: '', cost: '', stock_quantity: '', reorder_level: '10', unit: 'kg' });
     setShowModal(true);
   };
   const openEdit = (p: Product) => {
@@ -93,8 +93,8 @@ export default function Products() {
                   <td className={`${TD} font-medium`}>{p.name}</td>
                   <td className={`${TD} text-gray-500`}>{p.sku}</td>
                   <td className={TD}>{p.category?.name || '-'}</td>
-                  <td className={TD}>${p.price.toFixed(2)}</td>
-                  <td className={TD}>${p.cost.toFixed(2)}</td>
+                  <td className={TD}>Rs.{p.price.toFixed(2)}</td>
+                  <td className={TD}>Rs.{p.cost.toFixed(2)}</td>
                   <td className={TD}><span className={p.stock_quantity <= p.reorder_level ? 'text-red-600 font-semibold' : ''}>{p.stock_quantity} {p.unit}</span></td>
                   <td className={TD}>
                     <div className="flex gap-1">
@@ -126,8 +126,8 @@ export default function Products() {
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label className={labelStyle}>Price *</label><input type="number" step="0.01" className={inputStyle} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required /></div>
-                <div><label className={labelStyle}>Cost *</label><input type="number" step="0.01" className={inputStyle} value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} required /></div>
+                <div><label className={labelStyle}>Price (Rs.) *</label><input type="number" step="0.01" className={inputStyle} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required /></div>
+                <div><label className={labelStyle}>Cost (Rs.) *</label><input type="number" step="0.01" className={inputStyle} value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} required /></div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div><label className={labelStyle}>Stock *</label><input type="number" className={inputStyle} value={form.stock_quantity} onChange={(e) => setForm({ ...form, stock_quantity: e.target.value })} required /></div>

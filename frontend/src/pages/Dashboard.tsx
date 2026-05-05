@@ -70,7 +70,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard title="Total Products" value={stats.total_products} icon={Package} color="bg-blue-600" />
         <StatCard title="Total Orders" value={stats.total_orders} icon={ShoppingCart} color="bg-green-600" />
-        <StatCard title="Total Revenue" value={`$${stats.total_revenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`} icon={DollarSign} color="bg-emerald-600" />
+        <StatCard title="Total Revenue" value={`Rs.${stats.total_revenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`} icon={DollarSign} color="bg-emerald-600" />
         <StatCard title="Pending Orders" value={stats.pending_orders} icon={Clock} color="bg-yellow-500" />
       </div>
 
@@ -102,7 +102,7 @@ export default function Dashboard() {
                   <tr key={order.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 border-b border-gray-100 font-medium">{order.order_number}</td>
                     <td className="px-4 py-3 border-b border-gray-100">{order.customer_name}</td>
-                    <td className="px-4 py-3 border-b border-gray-100">${order.total.toFixed(2)}</td>
+                    <td className="px-4 py-3 border-b border-gray-100">Rs.{order.total.toFixed(2)}</td>
                     <td className="px-4 py-3 border-b border-gray-100"><span className={getStatusBadgeClass(order.status)}>{order.status}</span></td>
                   </tr>
                 ))}

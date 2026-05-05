@@ -126,8 +126,8 @@ export default function Payroll() {
 
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4"><div className="flex items-center gap-2 text-sm text-gray-500"><Users className="h-4 w-4" />Records</div><p className="text-2xl font-bold mt-1">{filtered.length}</p></div>
-        <div className="bg-white rounded-xl shadow-sm border p-4"><div className="flex items-center gap-2 text-sm text-gray-500"><DollarSign className="h-4 w-4" />Gross Total</div><p className="text-2xl font-bold mt-1 text-blue-600">₦{totalGross.toLocaleString()}</p></div>
-        <div className="bg-white rounded-xl shadow-sm border p-4"><div className="flex items-center gap-2 text-sm text-gray-500"><DollarSign className="h-4 w-4" />Net Total</div><p className="text-2xl font-bold mt-1 text-green-600">₦{totalNet.toLocaleString()}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border p-4"><div className="flex items-center gap-2 text-sm text-gray-500"><DollarSign className="h-4 w-4" />Gross Total</div><p className="text-2xl font-bold mt-1 text-blue-600">Rs.{totalGross.toLocaleString()}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border p-4"><div className="flex items-center gap-2 text-sm text-gray-500"><DollarSign className="h-4 w-4" />Net Total</div><p className="text-2xl font-bold mt-1 text-green-600">Rs.{totalNet.toLocaleString()}</p></div>
         <div className="bg-white rounded-xl shadow-sm border p-4"><div className="flex items-center gap-2 text-sm text-gray-500"><CheckCircle className="h-4 w-4" />Paid</div><p className="text-2xl font-bold mt-1">{paidCount}/{filtered.length}</p></div>
       </div>
 
@@ -151,10 +151,10 @@ export default function Payroll() {
                   <tr key={r.id} className="hover:bg-gray-50">
                     <td className={`${TD} font-medium`}><div>{r.employee_name}</div><div className="text-xs text-gray-400">{r.employee_code}</div></td>
                     <td className={TD}><span className="capitalize">{r.department}</span></td>
-                    <td className={TD}>₦{r.base_salary.toLocaleString()}</td>
-                    <td className={TD}>₦{totalAllow.toLocaleString()}</td>
-                    <td className={TD}>₦{r.total_deductions.toLocaleString()}</td>
-                    <td className={`${TD} font-semibold`}>₦{r.net_salary.toLocaleString()}</td>
+                    <td className={TD}>Rs.{r.base_salary.toLocaleString()}</td>
+                    <td className={TD}>Rs.{totalAllow.toLocaleString()}</td>
+                    <td className={TD}>Rs.{r.total_deductions.toLocaleString()}</td>
+                    <td className={`${TD} font-semibold`}>Rs.{r.net_salary.toLocaleString()}</td>
                     <td className={TD}><span className={getStatusBadgeClass(r.status)}>{r.status}</span></td>
                     <td className={TD}>
                       <div className="flex gap-1">
@@ -173,8 +173,8 @@ export default function Payroll() {
         </div>
         {filtered.length > 0 && (
           <div className="p-4 border-t bg-gray-50 text-sm font-medium flex justify-between">
-            <span>Total Deductions: ₦{totalDeductions.toLocaleString()}</span>
-            <span>Total Net Pay: ₦{totalNet.toLocaleString()}</span>
+            <span>Total Deductions: Rs.{totalDeductions.toLocaleString()}</span>
+            <span>Total Net Pay: Rs.{totalNet.toLocaleString()}</span>
           </div>
         )}
       </div>
@@ -245,29 +245,29 @@ export default function Payroll() {
               <div>
                 <h4 className="text-sm font-semibold text-green-700 mb-2">Earnings</h4>
                 <div className="space-y-1 text-sm">
-                  <div className="flex justify-between"><span>Base Salary</span><span>₦{showSlip.earnings.base_salary.toLocaleString()}</span></div>
-                  {showSlip.earnings.housing_allowance > 0 && <div className="flex justify-between"><span>Housing Allowance</span><span>₦{showSlip.earnings.housing_allowance.toLocaleString()}</span></div>}
-                  {showSlip.earnings.transport_allowance > 0 && <div className="flex justify-between"><span>Transport Allowance</span><span>₦{showSlip.earnings.transport_allowance.toLocaleString()}</span></div>}
-                  {showSlip.earnings.overtime_pay > 0 && <div className="flex justify-between"><span>Overtime Pay</span><span>₦{showSlip.earnings.overtime_pay.toLocaleString()}</span></div>}
-                  {showSlip.earnings.other_allowances > 0 && <div className="flex justify-between"><span>Other Allowances</span><span>₦{showSlip.earnings.other_allowances.toLocaleString()}</span></div>}
-                  <div className="flex justify-between font-semibold border-t pt-1"><span>Gross Salary</span><span>₦{showSlip.gross_salary.toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span>Base Salary</span><span>Rs.{showSlip.earnings.base_salary.toLocaleString()}</span></div>
+                  {showSlip.earnings.housing_allowance > 0 && <div className="flex justify-between"><span>Housing Allowance</span><span>Rs.{showSlip.earnings.housing_allowance.toLocaleString()}</span></div>}
+                  {showSlip.earnings.transport_allowance > 0 && <div className="flex justify-between"><span>Transport Allowance</span><span>Rs.{showSlip.earnings.transport_allowance.toLocaleString()}</span></div>}
+                  {showSlip.earnings.overtime_pay > 0 && <div className="flex justify-between"><span>Overtime Pay</span><span>Rs.{showSlip.earnings.overtime_pay.toLocaleString()}</span></div>}
+                  {showSlip.earnings.other_allowances > 0 && <div className="flex justify-between"><span>Other Allowances</span><span>Rs.{showSlip.earnings.other_allowances.toLocaleString()}</span></div>}
+                  <div className="flex justify-between font-semibold border-t pt-1"><span>Gross Salary</span><span>Rs.{showSlip.gross_salary.toLocaleString()}</span></div>
                 </div>
               </div>
               <div>
                 <h4 className="text-sm font-semibold text-red-700 mb-2">Deductions</h4>
                 <div className="space-y-1 text-sm">
-                  {showSlip.deductions.tax > 0 && <div className="flex justify-between"><span>Tax</span><span>₦{showSlip.deductions.tax.toLocaleString()}</span></div>}
-                  {showSlip.deductions.pension > 0 && <div className="flex justify-between"><span>Pension</span><span>₦{showSlip.deductions.pension.toLocaleString()}</span></div>}
-                  {showSlip.deductions.loan > 0 && <div className="flex justify-between"><span>Loan Repayment</span><span>₦{showSlip.deductions.loan.toLocaleString()}</span></div>}
-                  {showSlip.deductions.advance > 0 && <div className="flex justify-between"><span>Advance</span><span>₦{showSlip.deductions.advance.toLocaleString()}</span></div>}
-                  {showSlip.deductions.late > 0 && <div className="flex justify-between"><span>Late Penalty</span><span>₦{showSlip.deductions.late.toLocaleString()}</span></div>}
-                  {showSlip.deductions.other > 0 && <div className="flex justify-between"><span>Other</span><span>₦{showSlip.deductions.other.toLocaleString()}</span></div>}
-                  <div className="flex justify-between font-semibold border-t pt-1"><span>Total Deductions</span><span>₦{showSlip.total_deductions.toLocaleString()}</span></div>
+                  {showSlip.deductions.tax > 0 && <div className="flex justify-between"><span>Tax</span><span>Rs.{showSlip.deductions.tax.toLocaleString()}</span></div>}
+                  {showSlip.deductions.pension > 0 && <div className="flex justify-between"><span>Pension</span><span>Rs.{showSlip.deductions.pension.toLocaleString()}</span></div>}
+                  {showSlip.deductions.loan > 0 && <div className="flex justify-between"><span>Loan Repayment</span><span>Rs.{showSlip.deductions.loan.toLocaleString()}</span></div>}
+                  {showSlip.deductions.advance > 0 && <div className="flex justify-between"><span>Advance</span><span>Rs.{showSlip.deductions.advance.toLocaleString()}</span></div>}
+                  {showSlip.deductions.late > 0 && <div className="flex justify-between"><span>Late Penalty</span><span>Rs.{showSlip.deductions.late.toLocaleString()}</span></div>}
+                  {showSlip.deductions.other > 0 && <div className="flex justify-between"><span>Other</span><span>Rs.{showSlip.deductions.other.toLocaleString()}</span></div>}
+                  <div className="flex justify-between font-semibold border-t pt-1"><span>Total Deductions</span><span>Rs.{showSlip.total_deductions.toLocaleString()}</span></div>
                 </div>
               </div>
               <div className="bg-blue-50 rounded-lg p-3 flex justify-between items-center">
                 <span className="font-semibold text-blue-800">Net Salary</span>
-                <span className="text-xl font-bold text-blue-700">₦{showSlip.net_salary.toLocaleString()}</span>
+                <span className="text-xl font-bold text-blue-700">Rs.{showSlip.net_salary.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-xs text-gray-400">
                 <span>Status: <span className="capitalize">{showSlip.status}</span></span>

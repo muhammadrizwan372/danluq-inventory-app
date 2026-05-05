@@ -58,9 +58,9 @@ export default function Expenses() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Total Expenses</p><p className="text-2xl font-bold text-gray-900">${totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Paid</p><p className="text-2xl font-bold text-green-600">${totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Unpaid</p><p className="text-2xl font-bold text-red-600">${totalUnpaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Total Expenses</p><p className="text-2xl font-bold text-gray-900">Rs.{totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Paid</p><p className="text-2xl font-bold text-green-600">Rs.{totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5"><p className="text-sm text-gray-500">Unpaid</p><p className="text-2xl font-bold text-red-600">Rs.{totalUnpaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p></div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -79,7 +79,7 @@ export default function Expenses() {
                   <td className={`${TD} text-gray-500`}>{new Date(exp.date).toLocaleDateString()}</td>
                   <td className={TD}><span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 capitalize">{exp.category}</span></td>
                   <td className={TD}>{exp.description}</td>
-                  <td className={`${TD} font-medium`}>${exp.amount.toFixed(2)}</td>
+                  <td className={`${TD} font-medium`}>Rs.{exp.amount.toFixed(2)}</td>
                   <td className={TD}>{exp.supplier_name || '-'}</td>
                   <td className={TD}>
                     {exp.is_paid

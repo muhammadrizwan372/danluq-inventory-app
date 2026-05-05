@@ -59,7 +59,7 @@ export default function PurchaseOrders() {
                   <td className={`${TD} font-medium`}>{po.po_number}</td>
                   <td className={TD}>{po.supplier?.name || '-'}</td>
                   <td className={TD}><span className={getStatusBadgeClass(po.status)}>{po.status}</span></td>
-                  <td className={`${TD} font-medium`}>${po.total.toFixed(2)}</td>
+                  <td className={`${TD} font-medium`}>Rs.{po.total.toFixed(2)}</td>
                   <td className={`${TD} text-gray-500`}>{po.expected_date ? new Date(po.expected_date).toLocaleDateString() : '-'}</td>
                   <td className={TD}>
                     <div className="flex gap-1">
@@ -86,9 +86,9 @@ export default function PurchaseOrders() {
                 <div><span className="text-sm text-gray-500">Status:</span><p><span className={getStatusBadgeClass(showDetail.status)}>{showDetail.status}</span></p></div>
               </div>
               <table className="w-full text-sm text-left"><thead className="bg-gray-50 border-b"><tr><th className={TH}>Product</th><th className={TH}>Qty</th><th className={TH}>Cost</th><th className={TH}>Total</th></tr></thead>
-                <tbody>{showDetail.items.map((item) => (<tr key={item.id}><td className={TD}>{item.product_name || `Product #${item.product_id}`}</td><td className={TD}>{item.quantity}</td><td className={TD}>${item.unit_cost.toFixed(2)}</td><td className={`${TD} font-medium`}>${item.total.toFixed(2)}</td></tr>))}</tbody>
+                <tbody>{showDetail.items.map((item) => (<tr key={item.id}><td className={TD}>{item.product_name || `Product #${item.product_id}`}</td><td className={TD}>{item.quantity}</td><td className={TD}>Rs.{item.unit_cost.toFixed(2)}</td><td className={`${TD} font-medium`}>Rs.{item.total.toFixed(2)}</td></tr>))}</tbody>
               </table>
-              <div className="mt-4 text-right text-sm space-y-1"><p>Subtotal: ${showDetail.subtotal.toFixed(2)}</p><p>Tax: ${showDetail.tax.toFixed(2)}</p><p className="text-lg font-bold">Total: ${showDetail.total.toFixed(2)}</p></div>
+              <div className="mt-4 text-right text-sm space-y-1"><p>Subtotal: Rs.{showDetail.subtotal.toFixed(2)}</p><p>Tax: Rs.{showDetail.tax.toFixed(2)}</p><p className="text-lg font-bold">Total: Rs.{showDetail.total.toFixed(2)}</p></div>
             </div>
           </div>
         </div>

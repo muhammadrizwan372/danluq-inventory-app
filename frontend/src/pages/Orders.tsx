@@ -59,7 +59,7 @@ export default function Orders() {
                   <td className={`${TD} font-medium`}>{o.order_number}</td>
                   <td className={TD}>{o.customer?.name || '-'}</td>
                   <td className={TD}><span className={getStatusBadgeClass(o.status)}>{o.status}</span></td>
-                  <td className={`${TD} font-medium`}>${o.total.toFixed(2)}</td>
+                  <td className={`${TD} font-medium`}>Rs.{o.total.toFixed(2)}</td>
                   <td className={`${TD} text-gray-500`}>{new Date(o.created_at).toLocaleDateString()}</td>
                   <td className={TD}>
                     <div className="flex gap-1 flex-wrap">
@@ -87,12 +87,12 @@ export default function Orders() {
                 <div><span className="text-sm text-gray-500">Customer:</span><p className="font-medium">{showDetail.customer?.name}</p></div>
                 <div><span className="text-sm text-gray-500">Status:</span><p><span className={getStatusBadgeClass(showDetail.status)}>{showDetail.status}</span></p></div>
                 <div><span className="text-sm text-gray-500">Date:</span><p>{new Date(showDetail.created_at).toLocaleString()}</p></div>
-                <div><span className="text-sm text-gray-500">Total:</span><p className="font-bold text-lg">${showDetail.total.toFixed(2)}</p></div>
+                <div><span className="text-sm text-gray-500">Total:</span><p className="font-bold text-lg">Rs.{showDetail.total.toFixed(2)}</p></div>
               </div>
               <table className="w-full text-sm text-left"><thead className="bg-gray-50 border-b"><tr><th className={TH}>Product</th><th className={TH}>Qty</th><th className={TH}>Price</th><th className={TH}>Total</th></tr></thead>
-                <tbody>{showDetail.items.map((item) => (<tr key={item.id}><td className={TD}>{item.product_name || `Product #${item.product_id}`}</td><td className={TD}>{item.quantity}</td><td className={TD}>${item.unit_price.toFixed(2)}</td><td className={`${TD} font-medium`}>${item.total.toFixed(2)}</td></tr>))}</tbody>
+                <tbody>{showDetail.items.map((item) => (<tr key={item.id}><td className={TD}>{item.product_name || `Product #${item.product_id}`}</td><td className={TD}>{item.quantity}</td><td className={TD}>Rs.{item.unit_price.toFixed(2)}</td><td className={`${TD} font-medium`}>Rs.{item.total.toFixed(2)}</td></tr>))}</tbody>
               </table>
-              <div className="mt-4 text-right space-y-1 text-sm"><p>Subtotal: ${showDetail.subtotal.toFixed(2)}</p><p>Tax: ${showDetail.tax.toFixed(2)}</p><p>Discount: -${showDetail.discount.toFixed(2)}</p><p className="text-lg font-bold">Total: ${showDetail.total.toFixed(2)}</p></div>
+              <div className="mt-4 text-right space-y-1 text-sm"><p>Subtotal: Rs.{showDetail.subtotal.toFixed(2)}</p><p>Tax: Rs.{showDetail.tax.toFixed(2)}</p><p>Discount: -Rs.{showDetail.discount.toFixed(2)}</p><p className="text-lg font-bold">Total: Rs.{showDetail.total.toFixed(2)}</p></div>
             </div>
           </div>
         </div>
