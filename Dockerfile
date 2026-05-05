@@ -2,8 +2,8 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install Node.js for frontend build
-RUN apt-get update && apt-get install -y curl && \
+# Install Node.js and PostgreSQL client libraries
+RUN apt-get update && apt-get install -y curl libpq-dev gcc && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     apt-get clean && rm -rf /var/lib/apt/lists/*

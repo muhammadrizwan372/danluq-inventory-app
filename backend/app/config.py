@@ -4,9 +4,12 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     APP_NAME: str = "Danluq Petro Industries"
-    DATABASE_URL: str = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "inventory.db",
+    DATABASE_URL: str = os.environ.get(
+        "DATABASE_URL",
+        "sqlite:///" + os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "inventory.db",
+        ),
     )
     SECRET_KEY: str = "your-secret-key-change-in-production"
     ALGORITHM: str = "HS256"
