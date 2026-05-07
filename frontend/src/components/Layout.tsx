@@ -22,6 +22,7 @@ import {
   Briefcase,
   Banknote,
   Factory,
+  Zap,
 } from 'lucide-react';
 
 interface NavItem { name: string; href: string; icon: any; adminOnly?: boolean; section?: string; }
@@ -35,6 +36,7 @@ const navigation: NavItem[] = [
   { name: 'Purchase Orders', href: '/purchase-orders', icon: ClipboardList },
   { name: 'Invoices', href: '/invoices', icon: FileText },
   { name: 'Production', href: '/production', icon: Factory },
+  { name: 'Electricity', href: '/electricity', icon: Zap },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
   { name: 'Chart of Accounts', href: '/accounts', icon: BookOpen, section: 'Accounting' },
   { name: 'Journal Entries', href: '/transactions', icon: Receipt },
