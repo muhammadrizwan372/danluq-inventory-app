@@ -18,6 +18,7 @@ import PayablesReceivables from './pages/PayablesReceivables';
 import FinancialReports from './pages/FinancialReports';
 import Employees from './pages/Employees';
 import Payroll from './pages/Payroll';
+import Production from './pages/Production';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -66,6 +67,7 @@ export default function App() {
             <Route path="/financial-reports" element={<FinancialReports />} />
             <Route path="/employees" element={<Employees />} />
             <Route path="/payroll" element={<Payroll />} />
+            <Route path="/production" element={<Production />} />
           </Route>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

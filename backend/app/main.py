@@ -15,6 +15,7 @@ from app.models.purchase_order import PurchaseOrder, PurchaseOrderItem
 from app.models.invoice import Invoice
 from app.models.accounting import Account, AccountType, Transaction, JournalEntry, Expense, PayableReceivable
 from app.models.hr import Employee, PayrollRecord
+from app.models.production import ProductionRecord
 from app.routers import (
     auth,
     users,
@@ -29,6 +30,7 @@ from app.routers import (
 )
 from app.routers import accounts, transactions, expenses, payables_receivables, financial_reports
 from app.routers import employees, payroll
+from app.routers import production
 from app.services.auth import get_password_hash
 from app.database import SessionLocal
 
@@ -59,6 +61,7 @@ app.include_router(payables_receivables.router)
 app.include_router(financial_reports.router)
 app.include_router(employees.router)
 app.include_router(payroll.router)
+app.include_router(production.router)
 
 DEFAULT_ACCOUNTS = [
     ("1000", "Cash", AccountType.ASSET),
