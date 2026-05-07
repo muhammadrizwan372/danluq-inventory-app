@@ -47,10 +47,15 @@ export default function Products() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const payload = { name: form.name, sku: form.sku, description: form.description || null, category_id: form.category_id ? parseInt(form.category_id) : null, price: parseFloat(form.price), cost: parseFloat(form.cost), stock_quantity: parseInt(form.stock_quantity), reorder_level: parseInt(form.reorder_level), unit: form.unit };
-    if (editing) await api.put(`/products/${editing.id}`, payload);
-    else await api.post('/products', payload);
-    setShowModal(false); fetchProducts();
+    try {
+      const payload = { name: form.name, sku: form.sku, description: form.description || null, category_id: form.category_id ? parseInt(form.category_id) : null, price: parseFloat(form.price), cost: parseFloat(form.cost), stock_quantity: parseInt(form.stock_quantity), reorder_level: form.reorder_level ? parseInt(form.reorder_level) : 10, unit: form.unit };
+      if (editing) await api.put(`/products/${editing.id}`, payload);
+      else await api.post('/products', payload);
+      setShowModal(false); fetchProducts();
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { detail?: string } } };
+      alert(error.response?.data?.detail || 'Failed to save product. Please try again.');
+    }
   };
 
   const handleDelete = async (id: number) => { if (!confirm('Delete this product?')) return; await api.delete(`/products/${id}`); fetchProducts(); };
