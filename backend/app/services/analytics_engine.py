@@ -16,6 +16,7 @@ from app.models.order import Order, OrderItem, OrderStatus
 from app.models.product import Product
 from app.models.accounting import Expense, ExpenseCategory, PayableReceivable, PayableReceivableType, PayableReceivableStatus
 from app.models.invoice import Invoice
+from app.models.hr import Employee, PayrollRecord, EmploymentStatus, Department
 
 
 def _linear_regression(values: List[float]) -> tuple:
@@ -561,4 +562,509 @@ def get_performance_comparison(db: Session) -> dict:
             "expenses": _percent_change(current["expenses"], previous["expenses"]),
             "profit": _percent_change(current["profit"], previous["profit"]),
         },
+    }
+
+
+def machine_wise_production(db: Session) -> dict:
+    """Analyze production by operator (used as machine/line proxy)."""
+    end = date.today()
+    start = end - timedelta(days=30)
+    prev_start = start - timedelta(days=30)
+
+    records = (
+        db.query(
+            ProductionRecord.operator,
+            func.sum(ProductionRecord.quantity_kg).label("total_kg"),
+            func.sum(ProductionRecord.waste_kg).label("waste_kg"),
+            func.count(ProductionRecord.id).label("record_count"),
+        )
+        .filter(ProductionRecord.date >= start, ProductionRecord.date <= end)
+        .group_by(ProductionRecord.operator)
+        .all()
+    )
+
+    prev_records = (
+        db.query(
+            ProductionRecord.operator,
+            func.sum(ProductionRecord.quantity_kg).label("total_kg"),
+        )
+        .filter(ProductionRecord.date >= prev_start, ProductionRecord.date < start)
+        .group_by(ProductionRecord.operator)
+        .all()
+    )
+    prev_map = {r.operator or "Unassigned": float(r.total_kg) for r in prev_records}
+
+    machines = []
+    total_production = sum(float(r.total_kg) for r in records)
+    for r in records:
+        name = r.operator or "Unassigned"
+        total = float(r.total_kg)
+        waste = float(r.waste_kg)
+        efficiency = round((total / (total + waste)) * 100, 1) if total + waste > 0 else 0
+        prev_total = prev_map.get(name, 0)
+        change = _percent_change(total, prev_total)
+        machines.append({
+            "name": name,
+            "total_kg": round(total, 2),
+            "waste_kg": round(waste, 2),
+            "efficiency": efficiency,
+            "record_count": int(r.record_count),
+            "share_percent": round((total / total_production * 100) if total_production > 0 else 0, 1),
+            "change_vs_prev": change,
+            "status": "efficient" if efficiency >= 90 else ("warning" if efficiency >= 75 else "inefficient"),
+        })
+
+    machines.sort(key=lambda x: x["total_kg"], reverse=True)
+
+    return {
+        "machines": machines,
+        "total_production": round(total_production, 2),
+        "total_machines": len(machines),
+        "avg_efficiency": round(sum(m["efficiency"] for m in machines) / max(len(machines), 1), 1),
+        "period_days": 30,
+    }
+
+
+def hourly_production_tracking(db: Session) -> dict:
+    """Analyze production patterns by time of day using shift data."""
+    end = date.today()
+    start = end - timedelta(days=30)
+
+    shift_data = (
+        db.query(
+            ProductionRecord.shift,
+            ProductionRecord.date,
+            func.sum(ProductionRecord.quantity_kg).label("total_kg"),
+            func.sum(ProductionRecord.waste_kg).label("waste_kg"),
+        )
+        .filter(ProductionRecord.date >= start, ProductionRecord.date <= end)
+        .group_by(ProductionRecord.shift, ProductionRecord.date)
+        .order_by(ProductionRecord.date)
+        .all()
+    )
+
+    day_totals = []
+    night_totals = []
+    daily_map: dict = {}
+    for r in shift_data:
+        d = r.date.isoformat()
+        if d not in daily_map:
+            daily_map[d] = {"date": d, "day_kg": 0, "night_kg": 0, "day_waste": 0, "night_waste": 0}
+        if r.shift == "day":
+            daily_map[d]["day_kg"] = round(float(r.total_kg), 2)
+            daily_map[d]["day_waste"] = round(float(r.waste_kg), 2)
+            day_totals.append(float(r.total_kg))
+        else:
+            daily_map[d]["night_kg"] = round(float(r.total_kg), 2)
+            daily_map[d]["night_waste"] = round(float(r.waste_kg), 2)
+            night_totals.append(float(r.total_kg))
+
+    avg_day = round(sum(day_totals) / max(len(day_totals), 1), 2)
+    avg_night = round(sum(night_totals) / max(len(night_totals), 1), 2)
+    peak_shift = "day" if avg_day >= avg_night else "night"
+
+    return {
+        "daily_breakdown": sorted(daily_map.values(), key=lambda x: x["date"]),
+        "avg_day_production": avg_day,
+        "avg_night_production": avg_night,
+        "peak_shift": peak_shift,
+        "total_day_production": round(sum(day_totals), 2),
+        "total_night_production": round(sum(night_totals), 2),
+        "day_count": len(day_totals),
+        "night_count": len(night_totals),
+    }
+
+
+def downtime_analysis(db: Session) -> dict:
+    """Analyze production gaps and wastage patterns as downtime indicators."""
+    end = date.today()
+    start = end - timedelta(days=30)
+
+    all_dates = set()
+    d = start
+    while d <= end:
+        all_dates.add(d)
+        d += timedelta(days=1)
+
+    production_dates = set(
+        r.date for r in
+        db.query(ProductionRecord.date)
+        .filter(ProductionRecord.date >= start, ProductionRecord.date <= end)
+        .distinct()
+        .all()
+    )
+
+    no_production_days = sorted(all_dates - production_dates)
+
+    waste_records = (
+        db.query(
+            ProductionRecord.date,
+            ProductionRecord.operator,
+            func.sum(ProductionRecord.waste_kg).label("waste"),
+            func.sum(ProductionRecord.quantity_kg).label("production"),
+        )
+        .filter(ProductionRecord.date >= start, ProductionRecord.date <= end)
+        .group_by(ProductionRecord.date, ProductionRecord.operator)
+        .all()
+    )
+
+    high_waste_events = []
+    for r in waste_records:
+        total = float(r.production) + float(r.waste)
+        waste_pct = round((float(r.waste) / total * 100), 1) if total > 0 else 0
+        if waste_pct > 15:
+            high_waste_events.append({
+                "date": r.date.isoformat(),
+                "operator": r.operator or "Unassigned",
+                "waste_kg": round(float(r.waste), 2),
+                "waste_percent": waste_pct,
+            })
+
+    high_waste_events.sort(key=lambda x: x["waste_percent"], reverse=True)
+
+    total_days = len(all_dates)
+    active_days = len(production_dates)
+    uptime_pct = round((active_days / total_days * 100) if total_days > 0 else 0, 1)
+
+    return {
+        "uptime_percent": uptime_pct,
+        "active_days": active_days,
+        "inactive_days": len(no_production_days),
+        "total_days": total_days,
+        "no_production_dates": [d.isoformat() for d in no_production_days[:10]],
+        "high_waste_events": high_waste_events[:10],
+        "total_high_waste_events": len(high_waste_events),
+    }
+
+
+def peak_load_analytics(db: Session) -> dict:
+    """Analyze electricity peak loads and usage patterns."""
+    end = date.today()
+    start = end - timedelta(days=90)
+
+    logs = (
+        db.query(ElectricityLog)
+        .filter(ElectricityLog.date >= start, ElectricityLog.date <= end)
+        .order_by(ElectricityLog.date)
+        .all()
+    )
+    if not logs:
+        return {"daily_loads": [], "peak_day": None, "avg_load": 0, "efficiency_score": 0}
+
+    daily_loads = []
+    max_load = 0
+    peak_day = None
+    total_units = 0
+    for log in logs:
+        units = float(log.total_units)
+        cost = float(log.total_cost)
+        total_units += units
+        if units > max_load:
+            max_load = units
+            peak_day = log.date.isoformat()
+        daily_loads.append({
+            "date": log.date.isoformat(),
+            "units": round(units, 2),
+            "cost": round(cost, 2),
+            "cost_per_unit": round(cost / units, 2) if units > 0 else 0,
+        })
+
+    avg_load = round(total_units / len(logs), 2)
+    load_factor = round((avg_load / max_load * 100) if max_load > 0 else 0, 1)
+
+    weekday_loads: dict = {}
+    for log in logs:
+        wd = log.date.strftime("%A")
+        if wd not in weekday_loads:
+            weekday_loads[wd] = []
+        weekday_loads[wd].append(float(log.total_units))
+
+    weekday_avg = {
+        wd: round(sum(vals) / len(vals), 2)
+        for wd, vals in weekday_loads.items()
+    }
+
+    return {
+        "daily_loads": daily_loads,
+        "peak_day": peak_day,
+        "peak_units": round(max_load, 2),
+        "avg_daily_units": avg_load,
+        "load_factor": load_factor,
+        "total_units": round(total_units, 2),
+        "total_cost": round(sum(float(l.total_cost) for l in logs), 2),
+        "weekday_averages": weekday_avg,
+        "period_days": len(logs),
+    }
+
+
+def cost_per_product(db: Session) -> dict:
+    """Calculate production cost per product using production, electricity, and expense data."""
+    end = date.today()
+    start = end - timedelta(days=30)
+
+    prod_records = (
+        db.query(
+            ProductionRecord.product_id,
+            func.sum(ProductionRecord.quantity_kg).label("total_kg"),
+            func.sum(ProductionRecord.waste_kg).label("waste_kg"),
+        )
+        .filter(ProductionRecord.date >= start, ProductionRecord.date <= end)
+        .group_by(ProductionRecord.product_id)
+        .all()
+    )
+
+    total_production = sum(float(r.total_kg) for r in prod_records)
+
+    total_elec_cost = db.query(func.coalesce(func.sum(ElectricityLog.total_cost), 0)).filter(
+        ElectricityLog.date >= start, ElectricityLog.date <= end
+    ).scalar()
+    total_elec_cost = float(total_elec_cost)
+
+    total_expenses = db.query(func.coalesce(func.sum(Expense.amount), 0)).filter(
+        Expense.date >= datetime(start.year, start.month, start.day, tzinfo=timezone.utc),
+        Expense.date <= datetime(end.year, end.month, end.day, 23, 59, 59, tzinfo=timezone.utc),
+    ).scalar()
+    total_expenses = float(total_expenses)
+
+    total_overhead = total_elec_cost + total_expenses
+
+    products_cost = []
+    for r in prod_records:
+        product = db.query(Product).filter(Product.id == r.product_id).first()
+        if not product:
+            continue
+        qty = float(r.total_kg)
+        waste = float(r.waste_kg)
+        share = qty / total_production if total_production > 0 else 0
+        allocated_overhead = total_overhead * share
+        material_cost = product.cost * qty
+        total_cost = material_cost + allocated_overhead
+        cost_per_kg = round(total_cost / qty, 2) if qty > 0 else 0
+        waste_cost = round(product.cost * waste, 2)
+
+        products_cost.append({
+            "product_id": product.id,
+            "product_name": product.name,
+            "sku": product.sku,
+            "quantity_kg": round(qty, 2),
+            "waste_kg": round(waste, 2),
+            "material_cost": round(material_cost, 2),
+            "overhead_allocated": round(allocated_overhead, 2),
+            "total_cost": round(total_cost, 2),
+            "cost_per_kg": cost_per_kg,
+            "waste_cost": waste_cost,
+            "selling_price": product.price,
+            "margin_per_kg": round(product.price - cost_per_kg, 2),
+            "margin_percent": round(((product.price - cost_per_kg) / product.price * 100) if product.price > 0 else 0, 1),
+        })
+
+    products_cost.sort(key=lambda x: x["total_cost"], reverse=True)
+
+    return {
+        "products": products_cost,
+        "total_production_kg": round(total_production, 2),
+        "total_electricity_cost": round(total_elec_cost, 2),
+        "total_overhead": round(total_overhead, 2),
+        "total_expenses": round(total_expenses, 2),
+        "period_days": 30,
+    }
+
+
+def employee_efficiency_analysis(db: Session) -> dict:
+    """Analyze employee productivity through production operator data and payroll."""
+    end = date.today()
+    start = end - timedelta(days=30)
+
+    operator_production = (
+        db.query(
+            ProductionRecord.operator,
+            func.sum(ProductionRecord.quantity_kg).label("total_kg"),
+            func.sum(ProductionRecord.waste_kg).label("waste_kg"),
+            func.count(ProductionRecord.id).label("shifts_worked"),
+        )
+        .filter(
+            ProductionRecord.date >= start,
+            ProductionRecord.date <= end,
+            ProductionRecord.operator.isnot(None),
+        )
+        .group_by(ProductionRecord.operator)
+        .all()
+    )
+
+    employees_data = []
+    total_production = sum(float(r.total_kg) for r in operator_production)
+    for r in operator_production:
+        total = float(r.total_kg)
+        waste = float(r.waste_kg)
+        efficiency = round((total / (total + waste)) * 100, 1) if total + waste > 0 else 0
+        per_shift = round(total / max(int(r.shifts_worked), 1), 2)
+        employees_data.append({
+            "operator": r.operator,
+            "total_production_kg": round(total, 2),
+            "waste_kg": round(waste, 2),
+            "efficiency": efficiency,
+            "shifts_worked": int(r.shifts_worked),
+            "avg_per_shift": per_shift,
+            "production_share": round((total / total_production * 100) if total_production > 0 else 0, 1),
+            "rating": "excellent" if efficiency >= 95 else ("good" if efficiency >= 85 else ("average" if efficiency >= 75 else "needs_improvement")),
+        })
+
+    employees_data.sort(key=lambda x: x["efficiency"], reverse=True)
+
+    dept_stats = (
+        db.query(Employee.department, func.count(Employee.id).label("count"))
+        .filter(Employee.status == EmploymentStatus.ACTIVE)
+        .group_by(Employee.department)
+        .all()
+    )
+    department_headcount = {
+        str(d.department.value if hasattr(d.department, "value") else d.department): int(d.count)
+        for d in dept_stats
+    }
+
+    total_active = db.query(func.count(Employee.id)).filter(
+        Employee.status == EmploymentStatus.ACTIVE
+    ).scalar() or 0
+
+    return {
+        "operators": employees_data,
+        "total_operators": len(employees_data),
+        "avg_efficiency": round(sum(e["efficiency"] for e in employees_data) / max(len(employees_data), 1), 1),
+        "total_production": round(total_production, 2),
+        "department_headcount": department_headcount,
+        "total_active_employees": int(total_active),
+    }
+
+
+def management_report(db: Session, period: str = "daily") -> dict:
+    """Generate management intelligence reports: daily, weekly, or monthly."""
+    end = date.today()
+    if period == "daily":
+        start = end
+        prev_start = end - timedelta(days=1)
+        prev_end = prev_start
+    elif period == "weekly":
+        start = end - timedelta(days=6)
+        prev_start = start - timedelta(days=7)
+        prev_end = start - timedelta(days=1)
+    else:
+        start = end.replace(day=1)
+        if start.month == 1:
+            prev_start = start.replace(year=start.year - 1, month=12)
+        else:
+            prev_start = start.replace(month=start.month - 1)
+        prev_end = start - timedelta(days=1)
+
+    def _period_stats(s: date, e: date) -> dict:
+        revenue = float(db.query(func.coalesce(func.sum(Order.total), 0)).filter(
+            Order.created_at >= datetime(s.year, s.month, s.day, tzinfo=timezone.utc),
+            Order.created_at <= datetime(e.year, e.month, e.day, 23, 59, 59, tzinfo=timezone.utc),
+            Order.status != OrderStatus.CANCELLED,
+        ).scalar())
+
+        orders_count = int(db.query(func.count(Order.id)).filter(
+            Order.created_at >= datetime(s.year, s.month, s.day, tzinfo=timezone.utc),
+            Order.created_at <= datetime(e.year, e.month, e.day, 23, 59, 59, tzinfo=timezone.utc),
+        ).scalar())
+
+        production_kg = float(db.query(func.coalesce(func.sum(ProductionRecord.quantity_kg), 0)).filter(
+            ProductionRecord.date >= s, ProductionRecord.date <= e,
+        ).scalar())
+
+        waste_kg = float(db.query(func.coalesce(func.sum(ProductionRecord.waste_kg), 0)).filter(
+            ProductionRecord.date >= s, ProductionRecord.date <= e,
+        ).scalar())
+
+        expenses_total = float(db.query(func.coalesce(func.sum(Expense.amount), 0)).filter(
+            Expense.date >= datetime(s.year, s.month, s.day, tzinfo=timezone.utc),
+            Expense.date <= datetime(e.year, e.month, e.day, 23, 59, 59, tzinfo=timezone.utc),
+        ).scalar())
+
+        elec_cost = float(db.query(func.coalesce(func.sum(ElectricityLog.total_cost), 0)).filter(
+            ElectricityLog.date >= s, ElectricityLog.date <= e,
+        ).scalar())
+
+        elec_units = float(db.query(func.coalesce(func.sum(ElectricityLog.total_units), 0)).filter(
+            ElectricityLog.date >= s, ElectricityLog.date <= e,
+        ).scalar())
+
+        efficiency = round((production_kg / (production_kg + waste_kg)) * 100, 1) if production_kg + waste_kg > 0 else 0
+
+        return {
+            "revenue": round(revenue, 2),
+            "orders": orders_count,
+            "production_kg": round(production_kg, 2),
+            "waste_kg": round(waste_kg, 2),
+            "efficiency": efficiency,
+            "expenses": round(expenses_total, 2),
+            "electricity_cost": round(elec_cost, 2),
+            "electricity_units": round(elec_units, 2),
+            "profit": round(revenue - expenses_total, 2),
+        }
+
+    current = _period_stats(start, end)
+    previous = _period_stats(prev_start, prev_end)
+
+    changes = {}
+    for key in current:
+        if isinstance(current[key], (int, float)) and isinstance(previous[key], (int, float)):
+            changes[key] = _percent_change(float(current[key]), float(previous[key]))
+
+    top_products = (
+        db.query(
+            Product.name,
+            func.sum(ProductionRecord.quantity_kg).label("total_kg"),
+        )
+        .join(ProductionRecord, Product.id == ProductionRecord.product_id)
+        .filter(ProductionRecord.date >= start, ProductionRecord.date <= end)
+        .group_by(Product.name)
+        .order_by(func.sum(ProductionRecord.quantity_kg).desc())
+        .limit(5)
+        .all()
+    )
+
+    top_expense_categories = (
+        db.query(Expense.category, func.sum(Expense.amount).label("total"))
+        .filter(
+            Expense.date >= datetime(start.year, start.month, start.day, tzinfo=timezone.utc),
+            Expense.date <= datetime(end.year, end.month, end.day, 23, 59, 59, tzinfo=timezone.utc),
+        )
+        .group_by(Expense.category)
+        .order_by(func.sum(Expense.amount).desc())
+        .limit(5)
+        .all()
+    )
+
+    insights = []
+    if changes.get("revenue", 0) > 10:
+        insights.append(f"Revenue increased {changes['revenue']}% compared to previous period")
+    elif changes.get("revenue", 0) < -10:
+        insights.append(f"Revenue decreased {abs(changes['revenue'])}% — review sales strategy")
+
+    if changes.get("efficiency", 0) < -5:
+        insights.append(f"Production efficiency dropped {abs(changes['efficiency'])}% — investigate waste")
+    elif changes.get("efficiency", 0) > 5:
+        insights.append(f"Production efficiency improved {changes['efficiency']}%")
+
+    if changes.get("expenses", 0) > 20:
+        insights.append(f"Expenses surged {changes['expenses']}% — review cost controls")
+
+    if current["production_kg"] > 0 and current["waste_kg"] / (current["production_kg"] + current["waste_kg"]) > 0.15:
+        insights.append(f"Waste rate is {round(current['waste_kg'] / (current['production_kg'] + current['waste_kg']) * 100, 1)}% — above 15% threshold")
+
+    if not insights:
+        insights.append("Operations are running within normal parameters")
+
+    return {
+        "period": period,
+        "date_range": {"start": start.isoformat(), "end": end.isoformat()},
+        "current": current,
+        "previous": previous,
+        "changes": changes,
+        "top_products": [{"name": p.name, "total_kg": round(float(p.total_kg), 2)} for p in top_products],
+        "top_expenses": [
+            {"category": str(e.category.value if hasattr(e.category, "value") else e.category), "total": round(float(e.total), 2)}
+            for e in top_expense_categories
+        ],
+        "insights": insights,
     }

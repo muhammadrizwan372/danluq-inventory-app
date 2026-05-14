@@ -47,6 +47,7 @@ const navigation: NavItem[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'AI Analytics', href: '/analytics', icon: Brain, section: 'Intelligence' },
   { name: 'Production Intel', href: '/production-intelligence', icon: Activity },
+  { name: 'Mgmt Reports', href: '/management-reports', icon: TrendingUp },
   { name: 'Products', href: '/products', icon: Package, section: 'Operations' },
   { name: 'Orders', href: '/orders', icon: ShoppingCart },
   { name: 'Customers', href: '/customers', icon: Users },

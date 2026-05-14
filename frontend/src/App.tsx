@@ -23,6 +23,7 @@ import Production from './pages/Production';
 import Electricity from './pages/Electricity';
 import Analytics from './pages/Analytics';
 import ProductionIntelligence from './pages/ProductionIntelligence';
+import ManagementReports from './pages/ManagementReports';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -79,6 +80,7 @@ export default function App() {
               <Route path="/electricity" element={<Electricity />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/production-intelligence" element={<ProductionIntelligence />} />
+              <Route path="/management-reports" element={<ManagementReports />} />
             </Route>
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import api from '../api/client';
 import { useTheme } from '../context/ThemeContext';
 import { getStatusBadgeClass } from '../components/ui';
@@ -8,6 +8,7 @@ import {
 import {
   Package, ShoppingCart, Users, Truck, DollarSign, Clock, AlertTriangle,
   TrendingUp, TrendingDown, Activity, Zap, Brain, ArrowUpRight, ArrowDownRight,
+  RefreshCw,
 } from 'lucide-react';
 
 interface DashboardData {
@@ -71,16 +72,31 @@ export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const [refreshing, setRefreshing] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
+  const fetchData = useCallback((silent = false) => {
+    if (!silent) setLoading(true);
+    else setRefreshing(true);
     Promise.all([
       api.get('/dashboard/').then((r) => r.data),
       api.get('/analytics/dashboard/executive').then((r) => r.data).catch(() => null),
     ]).then(([dash, anal]) => {
       setData(dash);
       setAnalytics(anal);
-    }).catch(console.error).finally(() => setLoading(false));
+      setLastRefresh(new Date());
+    }).catch(console.error).finally(() => {
+      setLoading(false);
+      setRefreshing(false);
+    });
   }, []);
+
+  useEffect(() => {
+    fetchData();
+    intervalRef.current = setInterval(() => fetchData(true), 30000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [fetchData]);
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
@@ -129,7 +145,18 @@ export default function Dashboard() {
           <h1 className={`text-2xl font-bold ${textPrimary}`}>Executive Dashboard</h1>
           <p className={`text-sm ${textSecondary}`}>AI-powered business intelligence overview</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <span className={`text-[10px] ${textSecondary}`}>
+            Updated {lastRefresh.toLocaleTimeString()}
+          </span>
+          <button
+            onClick={() => fetchData(true)}
+            disabled={refreshing}
+            className={`p-2 rounded-lg transition-colors ${theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}
+            title="Refresh now"
+          >
+            <RefreshCw className={`h-4 w-4 ${textSecondary} ${refreshing ? 'animate-spin' : ''}`} />
+          </button>
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-medium">
             <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
             Live

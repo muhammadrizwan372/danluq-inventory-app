@@ -26,6 +26,9 @@ export default function Analytics() {
   const [expenseAnalytics, setExpenseAnalytics] = useState<any>(null);
   const [elecDepts, setElecDepts] = useState<any>(null);
   const [performance, setPerformance] = useState<any>(null);
+  const [costPerProduct, setCostPerProduct] = useState<any>(null);
+  const [peakLoad, setPeakLoad] = useState<any>(null);
+  const [employeeEff, setEmployeeEff] = useState<any>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -39,7 +42,10 @@ export default function Analytics() {
       api.get('/analytics/expenses').then((r) => r.data).catch(() => null),
       api.get('/analytics/electricity/departments').then((r) => r.data).catch(() => null),
       api.get('/analytics/performance/comparison').then((r) => r.data).catch(() => null),
-    ]).then(([prod, elec, inv, profit, eff, recs, exp, eDepts, perf]) => {
+      api.get('/analytics/cost-per-product').then((r) => r.data).catch(() => null),
+      api.get('/analytics/electricity/peak-load').then((r) => r.data).catch(() => null),
+      api.get('/analytics/employees/efficiency').then((r) => r.data).catch(() => null),
+    ]).then(([prod, elec, inv, profit, eff, recs, exp, eDepts, perf, cpp, pl, empEff]) => {
       setProdForecast(prod);
       setElecForecast(elec);
       setInventory(inv);
@@ -49,6 +55,9 @@ export default function Analytics() {
       setExpenseAnalytics(exp);
       setElecDepts(eDepts);
       setPerformance(perf);
+      setCostPerProduct(cpp);
+      setPeakLoad(pl);
+      setEmployeeEff(empEff);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -440,6 +449,71 @@ export default function Analytics() {
               ) : <p className={`text-sm text-center py-16 ${textS}`}>No expense data</p>}
             </div>
           </div>
+
+          {/* Cost Per Product */}
+          {costPerProduct?.products?.length > 0 && (
+            <div className="glass-card rounded-2xl p-5">
+              <h2 className={`text-base font-semibold mb-4 ${textP}`}>Production Cost Per Product</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className={`border-b ${theme === 'dark' ? 'border-border-dark' : 'border-gray-200'}`}>
+                      <th className={`text-left py-2 px-3 font-medium ${textS}`}>Product</th>
+                      <th className={`text-right py-2 px-3 font-medium ${textS}`}>Qty (kg)</th>
+                      <th className={`text-right py-2 px-3 font-medium ${textS}`}>Material Cost</th>
+                      <th className={`text-right py-2 px-3 font-medium ${textS}`}>Overhead</th>
+                      <th className={`text-right py-2 px-3 font-medium ${textS}`}>Cost/kg</th>
+                      <th className={`text-right py-2 px-3 font-medium ${textS}`}>Price</th>
+                      <th className={`text-right py-2 px-3 font-medium ${textS}`}>Margin</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {costPerProduct.products.map((p: any) => (
+                      <tr key={p.product_id} className={`border-b ${theme === 'dark' ? 'border-border-dark/50' : 'border-gray-100'}`}>
+                        <td className={`py-2 px-3 font-medium ${textP}`}>{p.product_name}</td>
+                        <td className={`py-2 px-3 text-right ${textP}`}>{p.quantity_kg.toLocaleString()}</td>
+                        <td className={`py-2 px-3 text-right ${textP}`}>Rs.{p.material_cost.toLocaleString()}</td>
+                        <td className={`py-2 px-3 text-right ${textS}`}>Rs.{p.overhead_allocated.toLocaleString()}</td>
+                        <td className={`py-2 px-3 text-right font-bold ${textP}`}>Rs.{p.cost_per_kg}</td>
+                        <td className={`py-2 px-3 text-right ${textP}`}>Rs.{p.selling_price}</td>
+                        <td className={`py-2 px-3 text-right font-bold ${p.margin_percent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          {p.margin_percent}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="flex gap-4 mt-3">
+                <span className={`text-xs ${textS}`}>Total Overhead: Rs.{costPerProduct.total_overhead?.toLocaleString()}</span>
+                <span className={`text-xs ${textS}`}>Electricity: Rs.{costPerProduct.total_electricity_cost?.toLocaleString()}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Profit Leak Detection */}
+          {expenseAnalytics?.profit_leaks?.length > 0 && (
+            <div className="glass-card rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <AlertTriangle className="h-5 w-5 text-red-500" />
+                <h2 className={`text-base font-semibold ${textP}`}>Profit Leak Detection</h2>
+              </div>
+              <p className={`text-xs mb-3 ${textS}`}>Categories with expenses increasing &gt;15% vs previous period</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {expenseAnalytics.profit_leaks.map((leak: any, i: number) => (
+                  <div key={i} className={`flex items-center justify-between p-3 rounded-xl ${
+                    theme === 'dark' ? 'bg-red-900/10 border border-red-900/20' : 'bg-red-50 border border-red-100'
+                  }`}>
+                    <div>
+                      <p className={`text-sm font-medium capitalize ${textP}`}>{leak.category}</p>
+                      <p className={`text-xs ${textS}`}>Rs.{leak.previous_amount.toLocaleString()} → Rs.{leak.current_amount.toLocaleString()}</p>
+                    </div>
+                    <span className="text-sm font-bold text-red-500">+{leak.change_percent}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -576,6 +650,104 @@ export default function Analytics() {
               </div>
             </div>
           )}
+
+          {/* Peak Load Analytics */}
+          {peakLoad && peakLoad.daily_loads?.length > 0 && (
+            <div className="glass-card rounded-2xl p-5">
+              <h2 className={`text-base font-semibold mb-4 ${textP}`}>Peak Load Analytics (90 days)</h2>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+                <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-red-50'}`}>
+                  <p className={`text-xs ${textS}`}>Peak Day</p>
+                  <p className={`text-sm font-bold text-red-500`}>{peakLoad.peak_day?.slice(5) || 'N/A'}</p>
+                  <p className={`text-[10px] ${textS}`}>{peakLoad.peak_units} kWh</p>
+                </div>
+                <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-blue-50'}`}>
+                  <p className={`text-xs ${textS}`}>Avg Daily</p>
+                  <p className={`text-sm font-bold text-blue-500`}>{peakLoad.avg_daily_units} kWh</p>
+                </div>
+                <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-green-50'}`}>
+                  <p className={`text-xs ${textS}`}>Load Factor</p>
+                  <p className={`text-sm font-bold text-green-500`}>{peakLoad.load_factor}%</p>
+                </div>
+                <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-purple-50'}`}>
+                  <p className={`text-xs ${textS}`}>Total Units</p>
+                  <p className={`text-sm font-bold text-purple-500`}>{peakLoad.total_units?.toLocaleString()}</p>
+                </div>
+                <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-amber-50'}`}>
+                  <p className={`text-xs ${textS}`}>Total Cost</p>
+                  <p className={`text-sm font-bold text-amber-500`}>Rs.{peakLoad.total_cost?.toLocaleString()}</p>
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={280}>
+                <AreaChart data={peakLoad.daily_loads}>
+                  <defs>
+                    <linearGradient id="gPeak" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+                  <XAxis dataKey="date" tick={{ fontSize: 9, fill: tickFill }} tickFormatter={(v) => v.slice(5)} />
+                  <YAxis tick={{ fontSize: 11, fill: tickFill }} />
+                  <Tooltip contentStyle={{ background: tooltipBg, border: 'none', borderRadius: 12 }} />
+                  <Area type="monotone" dataKey="units" stroke="#ef4444" fill="url(#gPeak)" strokeWidth={2} name="Daily Load (kWh)" />
+                </AreaChart>
+              </ResponsiveContainer>
+              {peakLoad.weekday_averages && Object.keys(peakLoad.weekday_averages).length > 0 && (
+                <div className="mt-4">
+                  <h3 className={`text-sm font-semibold mb-2 ${textP}`}>Average by Weekday</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(peakLoad.weekday_averages).map(([day, avg]: [string, any]) => (
+                      <div key={day} className={`px-3 py-2 rounded-lg text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'}`}>
+                        <p className={`text-[10px] ${textS}`}>{day.slice(0, 3)}</p>
+                        <p className={`text-xs font-bold ${textP}`}>{avg}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Employee Efficiency */}
+      {employeeEff && employeeEff.operators?.length > 0 && (
+        <div className="glass-card rounded-2xl p-5 animate-fade-in">
+          <div className="flex items-center gap-2 mb-4">
+            <Shield className="h-5 w-5 text-blue-500" />
+            <h2 className={`text-base font-semibold ${textP}`}>Employee Efficiency Analysis</h2>
+            <span className={`text-xs px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-white/10' : 'bg-gray-100'} ${textS}`}>
+              {employeeEff.total_operators} operators \u2022 Avg {employeeEff.avg_efficiency}%
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {employeeEff.operators.map((op: any, i: number) => (
+              <div key={i} className={`rounded-xl border p-4 ${
+                theme === 'dark' ? 'bg-white/5 border-border-dark' : 'bg-gray-50 border-gray-200'
+              }`}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-sm font-semibold ${textP}`}>{op.operator}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                    op.rating === 'excellent' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : op.rating === 'good' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                      : op.rating === 'average' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                      : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                  }`}>{op.rating.replace('_', ' ')}</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 mb-2">
+                  <div className={`h-full rounded-full ${
+                    op.efficiency >= 95 ? 'bg-green-500' : op.efficiency >= 85 ? 'bg-blue-500' : op.efficiency >= 75 ? 'bg-yellow-500' : 'bg-red-500'
+                  }`} style={{ width: `${Math.min(op.efficiency, 100)}%` }} />
+                </div>
+                <div className="grid grid-cols-3 gap-1 text-center">
+                  <div><p className={`text-[10px] ${textS}`}>Efficiency</p><p className={`text-xs font-bold ${textP}`}>{op.efficiency}%</p></div>
+                  <div><p className={`text-[10px] ${textS}`}>Output</p><p className={`text-xs font-bold ${textP}`}>{op.total_production_kg} kg</p></div>
+                  <div><p className={`text-[10px] ${textS}`}>Avg/Shift</p><p className={`text-xs font-bold ${textP}`}>{op.avg_per_shift} kg</p></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

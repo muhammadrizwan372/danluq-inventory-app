@@ -16,6 +16,13 @@ from app.services.analytics_engine import (
     department_wise_electricity,
     expense_analytics,
     get_performance_comparison,
+    machine_wise_production,
+    hourly_production_tracking,
+    downtime_analysis,
+    peak_load_analytics,
+    cost_per_product,
+    employee_efficiency_analysis,
+    management_report,
 )
 
 router = APIRouter(prefix="/api/analytics", tags=["Analytics & AI"])
@@ -110,3 +117,62 @@ def api_executive_dashboard(
         "expense_breakdown": expense_analytics(db),
         "electricity": department_wise_electricity(db),
     }
+
+
+@router.get("/production/machines")
+def api_machine_production(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return machine_wise_production(db)
+
+
+@router.get("/production/hourly")
+def api_hourly_production(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return hourly_production_tracking(db)
+
+
+@router.get("/production/downtime")
+def api_downtime_analysis(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return downtime_analysis(db)
+
+
+@router.get("/electricity/peak-load")
+def api_peak_load(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return peak_load_analytics(db)
+
+
+@router.get("/cost-per-product")
+def api_cost_per_product(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return cost_per_product(db)
+
+
+@router.get("/employees/efficiency")
+def api_employee_efficiency(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return employee_efficiency_analysis(db)
+
+
+@router.get("/reports/{period}")
+def api_management_report(
+    period: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if period not in ("daily", "weekly", "monthly"):
+        period = "daily"
+    return management_report(db, period)

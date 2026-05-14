@@ -5,7 +5,7 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend, LineChart, Line,
 } from 'recharts';
-import { Activity, TrendingUp, Factory, AlertTriangle, Clock, Gauge, RefreshCw } from 'lucide-react';
+import { Activity, TrendingUp, Factory, AlertTriangle, Clock, Gauge, RefreshCw, Users, XCircle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 export default function ProductionIntelligence() {
   const { theme } = useTheme();
@@ -13,6 +13,9 @@ export default function ProductionIntelligence() {
   const [efficiency, setEfficiency] = useState<any>(null);
   const [forecast, setForecast] = useState<any>(null);
   const [summary, setSummary] = useState<any[]>([]);
+  const [machines, setMachines] = useState<any>(null);
+  const [downtime, setDowntime] = useState<any>(null);
+  const [hourly, setHourly] = useState<any>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -20,10 +23,16 @@ export default function ProductionIntelligence() {
       api.get('/analytics/production/efficiency').then((r) => r.data).catch(() => null),
       api.get('/analytics/predict/production').then((r) => r.data).catch(() => null),
       api.get('/production/summary').then((r) => r.data).catch(() => []),
-    ]).then(([eff, fc, sum]) => {
+      api.get('/analytics/production/machines').then((r) => r.data).catch(() => null),
+      api.get('/analytics/production/downtime').then((r) => r.data).catch(() => null),
+      api.get('/analytics/production/hourly').then((r) => r.data).catch(() => null),
+    ]).then(([eff, fc, sum, mach, dt, hr]) => {
       setEfficiency(eff);
       setForecast(fc);
       setSummary(sum || []);
+      setMachines(mach);
+      setDowntime(dt);
+      setHourly(hr);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -207,6 +216,158 @@ export default function ProductionIntelligence() {
           </ResponsiveContainer>
         ) : <p className={`text-sm text-center py-16 ${textS}`}>Insufficient data for production forecasting</p>}
       </div>
+
+      {/* Machine-wise Production */}
+      {machines?.machines && machines.machines.length > 0 && (
+        <div className="glass-card rounded-2xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Factory className="h-5 w-5 text-purple-500" />
+            <h2 className={`text-base font-semibold ${textP}`}>Machine / Operator Performance</h2>
+            <span className={`text-xs px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-white/10' : 'bg-gray-100'} ${textS}`}>
+              {machines.total_machines} units • Avg {machines.avg_efficiency}%
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {machines.machines.map((m: any, i: number) => (
+              <div key={i} className={`rounded-xl border p-4 transition-all duration-200 hover:shadow-md ${
+                theme === 'dark' ? 'bg-white/5 border-border-dark' : 'bg-gray-50 border-gray-200'
+              }`}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-sm font-semibold ${textP}`}>{m.name}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                    m.status === 'efficient' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : m.status === 'warning' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                      : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                  }`}>{m.efficiency}%</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 mb-2">
+                  <div className={`h-full rounded-full ${
+                    m.efficiency >= 90 ? 'bg-green-500' : m.efficiency >= 75 ? 'bg-yellow-500' : 'bg-red-500'
+                  }`} style={{ width: `${Math.min(m.efficiency, 100)}%` }} />
+                </div>
+                <div className="grid grid-cols-3 gap-1 text-center">
+                  <div><p className={`text-[10px] ${textS}`}>Output</p><p className={`text-xs font-bold ${textP}`}>{m.total_kg.toLocaleString()} kg</p></div>
+                  <div><p className={`text-[10px] ${textS}`}>Waste</p><p className="text-xs font-bold text-red-500">{m.waste_kg} kg</p></div>
+                  <div><p className={`text-[10px] ${textS}`}>Share</p><p className={`text-xs font-bold ${textP}`}>{m.share_percent}%</p></div>
+                </div>
+                <div className="mt-2 flex items-center justify-center gap-1">
+                  {m.change_vs_prev > 0 ? <ArrowUpRight className="h-3 w-3 text-green-500" /> : m.change_vs_prev < 0 ? <ArrowDownRight className="h-3 w-3 text-red-500" /> : null}
+                  <span className={`text-[10px] ${m.change_vs_prev > 0 ? 'text-green-500' : m.change_vs_prev < 0 ? 'text-red-500' : textS}`}>
+                    {m.change_vs_prev > 0 ? '+' : ''}{m.change_vs_prev}% vs prev
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Downtime Analysis */}
+      {downtime && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="glass-card rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <XCircle className="h-5 w-5 text-red-500" />
+              <h2 className={`text-base font-semibold ${textP}`}>Uptime & Downtime</h2>
+            </div>
+            <div className="flex items-center gap-6 mb-4">
+              <div className="text-center">
+                <p className={`text-3xl font-bold ${downtime.uptime_percent >= 90 ? 'text-green-500' : 'text-yellow-500'}`}>
+                  {downtime.uptime_percent}%
+                </p>
+                <p className={`text-xs ${textS}`}>Uptime</p>
+              </div>
+              <div className="flex-1">
+                <div className="h-3 rounded-full bg-gray-200 dark:bg-gray-700">
+                  <div className="h-full rounded-full bg-green-500" style={{ width: `${downtime.uptime_percent}%` }} />
+                </div>
+                <div className="flex justify-between mt-1">
+                  <span className={`text-[10px] ${textS}`}>{downtime.active_days} active days</span>
+                  <span className={`text-[10px] ${textS}`}>{downtime.inactive_days} inactive</span>
+                </div>
+              </div>
+            </div>
+            {downtime.no_production_dates?.length > 0 && (
+              <div>
+                <p className={`text-xs font-medium mb-2 ${textS}`}>No-production dates</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {downtime.no_production_dates.map((d: string, i: number) => (
+                    <span key={i} className={`text-[10px] px-2 py-1 rounded-md ${
+                      theme === 'dark' ? 'bg-red-900/20 text-red-400' : 'bg-red-50 text-red-600'
+                    }`}>{d.slice(5)}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="glass-card rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle className="h-5 w-5 text-yellow-500" />
+              <h2 className={`text-base font-semibold ${textP}`}>High Waste Events ({downtime.total_high_waste_events})</h2>
+            </div>
+            {downtime.high_waste_events?.length > 0 ? (
+              <div className="space-y-2">
+                {downtime.high_waste_events.slice(0, 6).map((evt: any, i: number) => (
+                  <div key={i} className={`flex items-center justify-between p-2.5 rounded-lg ${
+                    theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'
+                  }`}>
+                    <div>
+                      <p className={`text-xs font-medium ${textP}`}>{evt.date}</p>
+                      <p className={`text-[10px] ${textS}`}>{evt.operator}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs font-bold text-red-500">{evt.waste_percent}%</p>
+                      <p className={`text-[10px] ${textS}`}>{evt.waste_kg} kg</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : <p className={`text-sm text-center py-8 ${textS}`}>No high-waste events detected</p>}
+          </div>
+        </div>
+      )}
+
+      {/* Hourly / Shift Production Comparison */}
+      {hourly && (
+        <div className="glass-card rounded-2xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Clock className="h-5 w-5 text-cyan-500" />
+            <h2 className={`text-base font-semibold ${textP}`}>Shift Production Patterns</h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-amber-50'}`}>
+              <p className={`text-xs ${textS}`}>Avg Day Output</p>
+              <p className={`text-lg font-bold text-amber-500`}>{hourly.avg_day_production} kg</p>
+            </div>
+            <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-indigo-50'}`}>
+              <p className={`text-xs ${textS}`}>Avg Night Output</p>
+              <p className={`text-lg font-bold text-indigo-500`}>{hourly.avg_night_production} kg</p>
+            </div>
+            <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-green-50'}`}>
+              <p className={`text-xs ${textS}`}>Peak Shift</p>
+              <p className={`text-lg font-bold capitalize text-green-500`}>{hourly.peak_shift}</p>
+            </div>
+            <div className={`p-3 rounded-xl text-center ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'}`}>
+              <p className={`text-xs ${textS}`}>Total Production</p>
+              <p className={`text-lg font-bold ${textP}`}>{(hourly.total_day_production + hourly.total_night_production).toLocaleString()} kg</p>
+            </div>
+          </div>
+          {hourly.daily_breakdown?.length > 0 && (
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={hourly.daily_breakdown}>
+                <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: tickFill }} tickFormatter={(v) => v.slice(5)} />
+                <YAxis tick={{ fontSize: 11, fill: tickFill }} />
+                <Tooltip contentStyle={{ background: tooltipBg, border: 'none', borderRadius: 12 }} />
+                <Legend />
+                <Bar dataKey="day_kg" fill="#f59e0b" radius={[3, 3, 0, 0]} name="Day (kg)" stackId="shift" />
+                <Bar dataKey="night_kg" fill="#6366f1" radius={[3, 3, 0, 0]} name="Night (kg)" stackId="shift" />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+      )}
 
       {/* Efficiency Trend */}
       <div className="glass-card rounded-2xl p-5">
