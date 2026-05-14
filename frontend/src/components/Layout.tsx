@@ -120,12 +120,15 @@ export default function Layout() {
         </div>
 
         <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto h-[calc(100vh-140px)]">
-          {filteredNav.map((item, idx) => {
+          {(() => {
+            let currentSection: string | undefined;
+            return filteredNav.map((item, idx) => {
+            if (item.section) currentSection = item.section;
+            const effectiveSection = currentSection;
             const isActive = location.pathname === item.href;
             const showSection = item.section && (idx === 0 || filteredNav[idx - 1]?.section !== item.section);
-            const sectionCollapsed = item.section ? collapsedSections[item.section] : false;
             const isFirstInSection = showSection;
-            const belongsToCollapsedSection = item.section && !isFirstInSection && collapsedSections[item.section];
+            const belongsToCollapsedSection = effectiveSection && collapsedSections[effectiveSection];
 
             return (
               <div key={item.name}>
@@ -137,7 +140,7 @@ export default function Layout() {
                     }`}
                   >
                     {item.section}
-                    {sectionCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                    {collapsedSections[item.section!] ? <ChevronRight className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                   </button>
                 )}
                 {!belongsToCollapsedSection && (
@@ -159,7 +162,8 @@ export default function Layout() {
                 )}
               </div>
             );
-          })}
+          });
+          })()}
         </nav>
 
         <div className={`p-3 border-t ${theme === 'dark' ? 'border-border-dark' : 'border-border'}`}>
