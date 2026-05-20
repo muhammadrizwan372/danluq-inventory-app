@@ -3,9 +3,9 @@ import api from '../api/client';
 import { useTheme } from '../context/ThemeContext';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Legend, LineChart, Line,
+  ResponsiveContainer, Legend,
 } from 'recharts';
-import { Activity, TrendingUp, Factory, AlertTriangle, Clock, Gauge, RefreshCw, Users, XCircle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Factory, AlertTriangle, Clock, RefreshCw, XCircle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 export default function ProductionIntelligence() {
   const { theme } = useTheme();

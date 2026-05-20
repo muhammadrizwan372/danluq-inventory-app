@@ -6,8 +6,8 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import {
-  Package, ShoppingCart, Users, Truck, DollarSign, Clock, AlertTriangle,
-  TrendingUp, TrendingDown, Activity, Zap, Brain, ArrowUpRight, ArrowDownRight,
+  Package, ShoppingCart, Users, DollarSign, Clock, AlertTriangle,
+  Activity, Brain, ArrowUpRight, ArrowDownRight,
   RefreshCw,
 } from 'lucide-react';
 
@@ -134,7 +134,6 @@ export default function Dashboard() {
     name: d.name, units: d.total_units, cost: d.estimated_cost, fill: COLORS[i % COLORS.length],
   }));
 
-  const cardBg = theme === 'dark' ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-200';
   const textPrimary = theme === 'dark' ? 'text-text-primary-dark' : 'text-text-primary';
   const textSecondary = theme === 'dark' ? 'text-text-secondary-dark' : 'text-text-secondary';
 
@@ -258,7 +257,7 @@ export default function Dashboard() {
                 <Pie data={expenseData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={3} dataKey="value">
                   {expenseData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Tooltip formatter={(v: number) => `Rs.${v.toLocaleString()}`} contentStyle={{ background: theme === 'dark' ? '#1e1e2e' : '#fff', border: 'none', borderRadius: 12 }} />
+                <Tooltip formatter={(v) => `Rs.${Number(v).toLocaleString()}`} contentStyle={{ background: theme === 'dark' ? '#1e1e2e' : '#fff', border: 'none', borderRadius: 12 }} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
               </PieChart>
             </ResponsiveContainer>
