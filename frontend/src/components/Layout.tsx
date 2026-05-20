@@ -128,7 +128,6 @@ export default function Layout() {
             const effectiveSection = currentSection;
             const isActive = location.pathname === item.href;
             const showSection = item.section && (idx === 0 || filteredNav[idx - 1]?.section !== item.section);
-            const isFirstInSection = showSection;
             const belongsToCollapsedSection = effectiveSection && collapsedSections[effectiveSection];
 
             return (

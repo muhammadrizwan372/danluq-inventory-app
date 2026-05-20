@@ -6,9 +6,9 @@ import {
   PieChart, Pie, Cell,
 } from 'recharts';
 import {
-  Calendar, TrendingUp, TrendingDown, DollarSign, Package,
-  Zap, ShoppingCart, ArrowUpRight, ArrowDownRight, RefreshCw,
-  FileText, Lightbulb, Factory,
+  Calendar, TrendingUp, TrendingDown, DollarSign,
+  ShoppingCart, ArrowUpRight, ArrowDownRight, RefreshCw,
+  Lightbulb, Factory,
 } from 'lucide-react';
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
@@ -206,7 +206,7 @@ export default function ManagementReports() {
                   ))}
                 </Pie>
                 <Tooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: gridStroke, borderRadius: 12 }}
-                  formatter={(value: number) => `Rs.${value.toLocaleString()}`} />
+                  formatter={(value) => `Rs.${Number(value).toLocaleString()}`} />
               </PieChart>
             </ResponsiveContainer>
             <div className="flex flex-wrap gap-3 mt-3 justify-center">

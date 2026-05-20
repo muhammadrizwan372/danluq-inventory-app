@@ -6,9 +6,9 @@ import {
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import {
-  Brain, TrendingUp, TrendingDown, Zap, Package, DollarSign,
-  AlertTriangle, Activity, ArrowUpRight, ArrowDownRight, RefreshCw,
-  Target, Shield, BarChart3,
+  Brain, Zap, Package, DollarSign,
+  AlertTriangle, Activity, RefreshCw,
+  Shield,
 } from 'lucide-react';
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
@@ -61,7 +61,6 @@ export default function Analytics() {
     }).finally(() => setLoading(false));
   }, []);
 
-  const cardBg = theme === 'dark' ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-200';
   const textP = theme === 'dark' ? 'text-text-primary-dark' : 'text-text-primary';
   const textS = theme === 'dark' ? 'text-text-secondary-dark' : 'text-text-secondary';
   const gridStroke = theme === 'dark' ? '#313244' : '#e5e7eb';
@@ -435,14 +434,14 @@ export default function Analytics() {
                 <ResponsiveContainer width="100%" height={280}>
                   <PieChart>
                     <Pie
-                      data={expenseAnalytics.by_category.map((c: any, i: number) => ({
+                      data={expenseAnalytics.by_category.map((c: any) => ({
                         name: c.category.charAt(0).toUpperCase() + c.category.slice(1), value: c.current_amount,
                       }))}
                       cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value"
                     >
                       {expenseAnalytics.by_category.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                     </Pie>
-                    <Tooltip formatter={(v: number) => `Rs.${v.toLocaleString()}`} contentStyle={{ background: tooltipBg, border: 'none', borderRadius: 12 }} />
+                    <Tooltip formatter={(v) => `Rs.${Number(v).toLocaleString()}`} contentStyle={{ background: tooltipBg, border: 'none', borderRadius: 12 }} />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -613,7 +612,7 @@ export default function Analytics() {
                     >
                       {elecDepts.departments.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                     </Pie>
-                    <Tooltip formatter={(v: number) => `${v.toLocaleString()} kWh`} contentStyle={{ background: tooltipBg, border: 'none', borderRadius: 12 }} />
+                    <Tooltip formatter={(v) => `${Number(v).toLocaleString()} kWh`} contentStyle={{ background: tooltipBg, border: 'none', borderRadius: 12 }} />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
                   </PieChart>
                 </ResponsiveContainer>
