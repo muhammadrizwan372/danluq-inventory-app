@@ -174,12 +174,12 @@ def download_invoice_pdf(
     # Company name
     c.setFillColorRGB(*white)
     c.setFont("Helvetica-Bold", 26)
-    c.drawString(40, height - 50, "DANLUQ PETRO INDUSTRIES")
+    c.drawString(40, height - 50, "DANLUQ INDUSTRIES")
 
     # Tagline
     c.setFillColorRGB(*light_gray)
     c.setFont("Helvetica", 9)
-    c.drawString(40, height - 68, "Premium Petrochemical Solutions  •  Industrial Excellence")
+    c.drawString(40, height - 68, "Plastic Recycling Solutions  •  Industrial Excellence")
 
     # Invoice label (right side)
     c.setFillColorRGB(*gold)
@@ -376,13 +376,13 @@ def download_invoice_pdf(
     c.drawString(40, footer_y - 30, "PAYMENT INFORMATION")
     c.setFillColorRGB(*light_gray)
     c.setFont("Helvetica", 8)
-    c.drawString(40, footer_y - 44, "Bank: Danluq Petro Industries Account")
+    c.drawString(40, footer_y - 44, "Bank: Danluq Industries Account")
     c.drawString(40, footer_y - 56, "Please include invoice number as reference")
 
     # Thank you
     c.setFillColorRGB(*mid_gray)
     c.setFont("Helvetica-Oblique", 9)
-    c.drawCentredString(width / 2, 20, "Thank you for your business  •  Danluq Petro Industries")
+    c.drawCentredString(width / 2, 20, "Thank you for your business  •  Danluq Industries")
 
     c.save()
     buf.seek(0)
