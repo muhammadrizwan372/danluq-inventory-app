@@ -17,6 +17,7 @@ from app.models.accounting import Account, AccountType, Transaction, JournalEntr
 from app.models.hr import Employee, PayrollRecord
 from app.models.production import ProductionRecord
 from app.models.electricity import ElectricityLog, ElectricityDepartment
+from app.models.notification import Notification
 from app.routers import (
     auth,
     users,
@@ -33,10 +34,11 @@ from app.routers import accounts, transactions, expenses, payables_receivables, 
 from app.routers import employees, payroll
 from app.routers import production
 from app.routers import electricity
+from app.routers import analytics, notifications
 from app.services.auth import get_password_hash
 from app.database import SessionLocal
 
-app = FastAPI(title=settings.APP_NAME, version="1.0.0")
+app = FastAPI(title=settings.APP_NAME, version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -65,6 +67,8 @@ app.include_router(employees.router)
 app.include_router(payroll.router)
 app.include_router(production.router)
 app.include_router(electricity.router)
+app.include_router(analytics.router)
+app.include_router(notifications.router)
 
 DEFAULT_ACCOUNTS = [
     ("1000", "Cash", AccountType.ASSET),
